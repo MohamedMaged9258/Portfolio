@@ -1,0 +1,13 @@
+{
+  // Cloudflare Workers static-assets config (deterministic, replaces the auto-generated setup).
+  // Cloudflare runs `npm run build` then `npx wrangler deploy`, which uploads ./dist.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "portfolio",
+  "compatibility_date": "2026-08-05",
+  "assets": {
+    "directory": "./dist",
+    // SPA fallback: serve index.html for unknown routes (e.g. /projects/homelab)
+    // so client-side routing works. Replaces the classic Pages _redirects file.
+    "not_found_handling": "single-page-application"
+  }
+}

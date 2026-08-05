@@ -28,3 +28,7 @@ Thumbs.db
 
 # vite cache
 .vite
+
+# wrangler / cloudflare
+.wrangler
+.dev.vars

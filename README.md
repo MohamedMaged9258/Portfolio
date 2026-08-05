@@ -32,9 +32,10 @@ npm run preview    # preview the production build
 npm run typecheck  # type-check with tsc
 ```
 
-## Deploy (Cloudflare Pages)
+## Deploy (Cloudflare Workers — static assets)
 
-- Framework preset: **Vite**
-- Build command: `npm run build`
-- Output directory: `dist`
-- SPA deep-links handled by `public/_redirects`
+Cloudflare builds on every push and runs `npx wrangler deploy`. Config is in `wrangler.jsonc`:
+
+- Assets served from `dist/`
+- Build command (Cloudflare project setting): `npm run build`
+- SPA deep-links (e.g. `/projects/homelab`) handled by `assets.not_found_handling: "single-page-application"`

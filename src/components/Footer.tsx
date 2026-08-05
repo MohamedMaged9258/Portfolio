@@ -9,7 +9,7 @@ export default function Footer() {
           © {new Date().getFullYear()} {profile.name}
         </p>
         <p className="font-mono text-xs text-slate-600">
-          Built with React, Vite &amp; Tailwind · Deployed on Cloudflare Pages
+          Built with React, Vite &amp; Tailwind · Deployed on Cloudflare
         </p>
       </Container>
     </footer>
