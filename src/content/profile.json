@@ -1,0 +1,61 @@
+{
+  "name": "Mohamed Maged",
+  "title": "Software Engineer",
+  "tagline": "Computer Engineering student building across mobile, AI/ML, and infrastructure.",
+  "location": "Egypt",
+  "email": "mohamedmaged9258@gmail.com",
+  "phone": "+201157094335",
+  "availability": "Open to entry-level Software Engineer roles",
+  "summary": "Proactive Computer Engineering student with a strong foundation in modern software development. I enjoy working end-to-end — from Flutter mobile apps and machine-learning models to the Linux servers and containers they run on. I'm looking for a challenging entry-level Software Engineer role where I can build secure, user-friendly applications.",
+  "socials": {
+    "github": "https://github.com/MohamedMaged9258",
+    "linkedin": "https://linkedin.com/in/mohamed-maged05"
+  },
+  "experience": [
+    {
+      "role": "Cross-Platform Mobile App Developer Intern",
+      "org": "DEPI",
+      "location": "Egypt · Hybrid",
+      "period": "Jul 2025 – Dec 2025",
+      "highlights": [
+        "Engineered application state management with Flutter Bloc, cutting debugging time by ~30% and improving maintainability.",
+        "Implemented a Firebase Authentication registration/login flow, enabling secure access for 500+ users during testing.",
+        "Collaborated in Agile sprints, contributing to a 95% on-time milestone delivery rate."
+      ]
+    },
+    {
+      "role": "Oracle Manufacturing Consultant Intern",
+      "org": "USE",
+      "location": "Egypt · On-site",
+      "period": "Jul 2025 – Sep 2025",
+      "highlights": [
+        "Analyzed client needs to design, configure, and implement Oracle ERP solutions.",
+        "Translated business requirements into detailed functional specifications for Oracle manufacturing modules.",
+        "Configured Oracle modules including WIP, BOM, Inventory, Cost Management, and Quality Management.",
+        "Delivered solutions across Oracle Fusion Cloud ERP and Oracle E-Business Suite."
+      ]
+    }
+  ],
+  "education": [
+    {
+      "school": "Alamein International University",
+      "degree": "B.S. in Computer Engineering",
+      "period": "Sep 2022 – Jan 2027 (expected)",
+      "highlights": [
+        "Relevant coursework: Computer Architecture, Software Engineering, Cloud Computing."
+      ]
+    }
+  ],
+  "skills": [
+    { "label": "Languages", "items": ["Java", "Python", "C++", "Dart", "SQL"] },
+    { "label": "Frameworks & Libraries", "items": ["Flutter", "FastAPI", "Pandas", "NumPy", "scikit-learn"] },
+    { "label": "Databases", "items": ["MySQL", "Firebase"] },
+    { "label": "DevOps & Tools", "items": ["Git", "GitHub", "Docker", "Proxmox", "VPNs"] },
+    { "label": "OS & Virtualization", "items": ["Linux (Ubuntu Server)", "Windows", "Proxmox VE"] },
+    { "label": "Concepts", "items": ["OOP", "Multithreading", "Agile"] }
+  ],
+  "languages": [
+    { "name": "Arabic", "level": "Native" },
+    { "name": "English", "level": "Professional Working Proficiency" }
+  ]
+}

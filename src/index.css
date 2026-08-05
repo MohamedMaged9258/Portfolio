@@ -1,0 +1,53 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+/* ---- Design tokens (dark, engineering-leaning) ---- */
+@theme {
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, SFMono-Regular, monospace;
+
+  --color-bg: #0a0e14;
+  --color-surface: #0f151e;
+  --color-elevated: #141c27;
+  --color-line: #1e2732;
+  --color-accent: #22d3ee;
+  --color-accent-soft: #164e57;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem; /* offset sticky nav for anchor links */
+  }
+
+  body {
+    @apply bg-bg text-slate-300 font-sans antialiased;
+  }
+
+  h1, h2, h3, h4 {
+    @apply text-slate-100;
+    text-wrap: balance;
+  }
+
+  ::selection {
+    background-color: color-mix(in oklab, var(--color-accent) 30%, transparent);
+    color: #fff;
+  }
+
+  * {
+    scrollbar-color: var(--color-line) transparent;
+  }
+}
+
+@layer components {
+  /* subtle dotted grid used behind the hero */
+  .bg-grid {
+    background-image: radial-gradient(circle at 1px 1px, var(--color-line) 1px, transparent 0);
+    background-size: 26px 26px;
+  }
+
+  /* small monospace eyebrow label used on section headers */
+  .eyebrow {
+    @apply font-mono text-xs tracking-widest uppercase text-accent;
+  }
+}

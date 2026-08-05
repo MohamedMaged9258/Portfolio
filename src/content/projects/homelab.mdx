@@ -1,0 +1,59 @@
+---
+title: "Home Lab Infrastructure & Server Management"
+slug: "homelab"
+summary: "A self-hosted virtualization lab on Proxmox VE running VMs, Linux containers, and dockerized apps — a production-like playground for networking, security, and deployment."
+stack: ["Proxmox VE", "Ubuntu Server", "Docker", "Bash", "WireGuard"]
+date: "2025-06"
+layout: "log"
+featured: true
+---
+
+I run a home lab to learn infrastructure the way it actually behaves in production — not just from lecture slides. What began as "somewhere to host my own projects" turned into a small, real environment for practicing the operational side of software engineering.
+
+## Why build a home lab
+
+Writing code is only half of shipping software; the other half is everything around it — the servers, the networking, the deployment, and keeping it all running. I wanted a safe place to break things and learn those skills hands-on, so I turned a single machine into a miniature datacenter.
+
+## Virtualization with Proxmox VE
+
+I use **Proxmox VE** as the hypervisor and split workloads two ways:
+
+- **Virtual machines** for full-OS workloads that need strong isolation.
+- **LXC containers** for lightweight services where a whole VM would be wasteful.
+
+This mirrors how real environments separate concerns, and it lets me spin up a clean Ubuntu Server in seconds to test an idea, then tear it down without touching anything else.
+
+## Networking: making services reachable
+
+### The problem
+
+As the number of services grew, reaching them by raw IP addresses became messy and error-prone.
+
+### What I did
+
+I designed a consistent addressing scheme, handled **IP allocation** deliberately instead of leaving it to DHCP luck, and set up **reverse DNS** so machines resolve to readable names. The lab started to feel less like a pile of IPs and more like a real network.
+
+## Secure remote access
+
+### The problem
+
+I wanted to reach the lab from anywhere without exposing it directly to the public internet.
+
+### What I did
+
+- Stood up a **WireGuard VPN** so remote access rides an encrypted tunnel.
+- Hardened **SSH** with key-based auth and sensible defaults, and tightened general system security.
+
+The result: I can manage everything remotely while keeping the attack surface small.
+
+## Hosting my own projects
+
+With the foundation in place, the lab earns its keep by **hosting my personal projects and dockerized applications**. Packaging apps with **Docker** keeps environments reproducible and makes testing and deployment far smoother — the same image runs the same way every time.
+
+## What I took away
+
+- Real comfort with Linux server administration and the command line.
+- A hands-on feel for networking, DNS, and VPNs, not just the theory.
+- The habit of thinking about deployment and security from the start, rather than as an afterthought.
+
+**Tools:** Proxmox VE · Ubuntu Server · Docker · Bash · WireGuard · SSH

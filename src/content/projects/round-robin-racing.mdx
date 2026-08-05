@@ -1,0 +1,25 @@
+---
+title: "Round-Robin Racing Game"
+slug: "round-robin-racing"
+summary: "A multi-threaded racing simulation that demonstrates concurrency and round-robin scheduling, with eight cars running as concurrent threads."
+stack: ["Java", "Multithreading"]
+date: "2024-11"
+layout: "case-study"
+links:
+  github: "https://github.com/MohamedMaged9258/Round-Robin-Racing-Game"
+---
+
+## Problem
+
+Concurrency is easy to describe and hard to feel. I wanted a project that makes **round-robin scheduling** and multithreading tangible rather than abstract.
+
+## Approach
+
+- Modeled each racing car as its own **thread**, advancing in turns under a round-robin scheme.
+- Coordinated **eight concurrent threads**, managing shared state safely so the race stays fair and consistent.
+
+## Outcome
+
+Running the cars concurrently improved processing speed by roughly **300%** compared with a single-threaded approach — a concrete demonstration of what concurrency buys you, and of the coordination it demands.
+
+**Tools:** Java · Multithreading
