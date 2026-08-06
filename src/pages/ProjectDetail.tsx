@@ -4,6 +4,7 @@ import { ArrowLeft, ExternalLink } from 'lucide-react'
 import { FaGithub } from 'react-icons/fa6'
 import Container from '../components/Container'
 import Footer from '../components/Footer'
+import PageTransition from '../components/PageTransition'
 import { mdxComponents } from '../components/mdxComponents'
 import { getProject } from '../lib/projects'
 import { cn } from '../lib/cn'
@@ -18,7 +19,7 @@ export default function ProjectDetail() {
   const isLog = layout === 'log'
 
   return (
-    <>
+    <PageTransition>
       <header className="sticky top-0 z-50 border-b border-line/70 bg-bg/80 backdrop-blur">
         <Container className="flex h-16 items-center justify-between">
           <Link
@@ -102,6 +103,6 @@ export default function ProjectDetail() {
         </Container>
       </main>
       <Footer />
-    </>
+    </PageTransition>
   )
 }

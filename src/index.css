@@ -12,6 +12,39 @@
   --color-line: #1e2732;
   --color-accent: #22d3ee;
   --color-accent-soft: #164e57;
+
+  /* ---- Motion vocabulary ---- */
+  --ease-signal: cubic-bezier(0.16, 1, 0.3, 1); /* expo-out: arrives fast, settles */
+  --ease-probe: cubic-bezier(0, 0, 0.2, 1);
+
+  --animate-scan: scan 14s linear infinite;
+  --animate-probe: probe 2.6s var(--ease-probe) infinite;
+
+  /* Sweeps the accent grid's mask left→right. Travel is set so the band clears
+     both edges completely: with mask-size 200%, the band sits at 92%–108% of the
+     element minus the position value, so 114% → -14% enters and exits off-screen. */
+  @keyframes scan {
+    from {
+      mask-position: 114% 0;
+    }
+    to {
+      mask-position: -14% 0;
+    }
+  }
+
+  /* Liveness probe: expands and fades, then holds dark for the rest of the
+     interval so it reads as a periodic check rather than a continuous pulse. */
+  @keyframes probe {
+    0% {
+      transform: scale(1);
+      opacity: 0.5;
+    }
+    70%,
+    100% {
+      transform: scale(2.6);
+      opacity: 0;
+    }
+  }
 }
 
 @layer base {
@@ -46,8 +79,42 @@
     background-size: 26px 26px;
   }
 
+  /* An accent copy of .bg-grid, revealed through a narrow travelling mask so the
+     dots brighten as the scan passes. Held still and identically sized to .bg-grid
+     so its dots stay in phase — translating the layer instead would drag its
+     background with it and make the two grids shimmer against each other. */
+  .bg-grid-scan {
+    background-image: radial-gradient(circle at 1px 1px, var(--color-accent) 1px, transparent 0);
+    background-size: 26px 26px;
+    opacity: 0.55;
+    mask-image: linear-gradient(90deg, transparent 46%, #000 50%, transparent 54%);
+    mask-size: 200% 100%;
+    mask-repeat: no-repeat;
+    /* Parked off-screen so no sliver shows on the frame before the sweep starts. */
+    mask-position: 114% 0;
+  }
+
   /* small monospace eyebrow label used on section headers */
   .eyebrow {
     @apply font-mono text-xs tracking-widest uppercase text-accent;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  /* A frozen scan band would read as a rendering bug, so drop it entirely. */
+  .bg-grid-scan {
+    display: none;
   }
 }
