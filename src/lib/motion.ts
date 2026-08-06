@@ -57,13 +57,19 @@ export const stagger = (each = 0.06, delay = 0): Variants => ({
 /**
  * Reveal trigger for scroll-in sections.
  *
- * The huge top margin is a safety net, not a style choice: it extends the observer's
+ * The huge top margin is load-bearing, not a style choice. It extends the observer's
  * root far above the viewport so anything already scrolled past counts as in view.
- * Without it a hard jump (a deep link with a #hash, or the browser restoring scroll
- * on reload) skips the intersection entirely and leaves those sections at opacity 0
- * until the reader happens to scroll back to them. The -10% bottom keeps the intended
- * "reveal just after it enters" timing on the way down.
+ * Without it, a hard jump (a deep link with a #hash, or the browser restoring scroll
+ * on reload) moves a section straight from below-the-fold to above-the-viewport
+ * without it ever being reported as intersecting — so with `once: true` the reveal
+ * never fires and the section is stranded at opacity 0.
  *
- * `as const` keeps `margin` a literal — motion's MarginType rejects a widened string.
+ * Measured, not assumed: dropping the top margin to 0px and hard-jumping to the page
+ * bottom leaves all four passed sections at opacity 0. A bare observer fires
+ * [false] across that jump, versus [false, true] with the margin in place.
+ *
+ * The -10% bottom keeps the intended "reveal just after it enters" timing scrolling
+ * down. `as const` keeps `margin` a literal — motion's MarginType rejects a widened
+ * string.
  */
 export const viewportOnce = { once: true, amount: 0.25, margin: '9999px 0px -10% 0px' } as const
