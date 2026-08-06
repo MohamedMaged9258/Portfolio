@@ -1,12 +1,12 @@
 {
   "name": "Mohamed Maged",
-  "title": "Software Engineer",
+  "title": "AIOps Engineer",
   "tagline": "Computer Engineering student building across mobile, AI/ML, and infrastructure.",
   "location": "Egypt",
   "email": "mohamedmaged9258@gmail.com",
   "phone": "+201157094335",
-  "availability": "Open to entry-level Software Engineer roles",
-  "summary": "Proactive Computer Engineering student with a strong foundation in modern software development. I enjoy working end-to-end — from Flutter mobile apps and machine-learning models to the Linux servers and containers they run on. I'm looking for a challenging entry-level Software Engineer role where I can build secure, user-friendly applications.",
+  "availability": "Open to entry-level AIOps Engineer roles",
+  "summary": "Proactive AI Engineering student with a strong foundation in modern software development. I enjoy working end-to-end — from Flutter mobile apps and machine-learning models to the Linux servers and containers they run on. I'm looking for a challenging entry-level Software Engineer role where I can build secure, user-friendly applications.",
   "socials": {
     "github": "https://github.com/MohamedMaged9258",
     "linkedin": "https://linkedin.com/in/mohamed-maged05"
@@ -39,7 +39,7 @@
   "education": [
     {
       "school": "Alamein International University",
-      "degree": "B.S. in Computer Engineering",
+      "degree": "B.S. in AI Engineering",
       "period": "Sep 2022 – Jan 2027 (expected)",
       "highlights": [
         "Relevant coursework: Computer Architecture, Software Engineering, Cloud Computing."
@@ -49,8 +49,8 @@
   "skills": [
     { "label": "Languages", "items": ["Java", "Python", "C++", "Dart", "SQL"] },
     { "label": "Frameworks & Libraries", "items": ["Flutter", "FastAPI", "Pandas", "NumPy", "scikit-learn"] },
-    { "label": "Databases", "items": ["MySQL", "Firebase"] },
-    { "label": "DevOps & Tools", "items": ["Git", "GitHub", "Docker", "Proxmox", "VPNs"] },
+    { "label": "Databases", "items": ["MySQL", "SQLite", "Firestore"] },
+    { "label": "DevOps & Tools", "items": ["Git", "GitHub", "Docker", "Proxmox", "VPNs", "AWS"] },
     { "label": "OS & Virtualization", "items": ["Linux (Ubuntu Server)", "Windows", "Proxmox VE"] },
     { "label": "Concepts", "items": ["OOP", "Multithreading", "Agile"] }
   ],
