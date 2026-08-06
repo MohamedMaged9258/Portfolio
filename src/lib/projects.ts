@@ -29,7 +29,7 @@ interface ProjectModule {
 }
 
 // Eagerly load every project's MDX (frontmatter + compiled body) at build time.
-const modules = import.meta.glob<ProjectModule>('../content/projects/*.mdx', {
+const modules = import.meta.glob<ProjectModule>('../../data/projects/*.mdx', {
   eager: true,
 })
 

@@ -19,14 +19,14 @@ export default function About() {
 
           <div className="rounded-lg border border-line bg-surface p-4">
             <p className="eyebrow">// languages</p>
-            <ul className="mt-2 space-y-1 text-sm">
+            <dl className="mt-3 space-y-2 text-sm">
               {profile.languages.map((l) => (
-                <li key={l.name} className="flex items-center justify-between gap-2">
-                  <span className="text-slate-200">{l.name}</span>
-                  <span className="text-slate-500">{l.level}</span>
-                </li>
+                <div key={l.name} className="flex gap-3">
+                  <dt className="w-16 shrink-0 font-medium text-slate-200">{l.name}</dt>
+                  <dd className="text-slate-500">{l.level}</dd>
+                </div>
               ))}
-            </ul>
+            </dl>
           </div>
         </div>
       </div>

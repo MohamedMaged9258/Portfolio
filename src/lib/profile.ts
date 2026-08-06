@@ -1,4 +1,4 @@
-import data from '../content/profile.json'
+import data from '../../data/profile.json'
 
 export interface ExperienceItem {
   role: string

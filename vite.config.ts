@@ -8,6 +8,8 @@ import rehypeSlug from 'rehype-slug'
 
 // https://vite.dev/config/
 export default defineConfig({
+  // Serve static assets (CV, portrait, favicon) from data/assets so everything lives under data/.
+  publicDir: 'data/assets',
   plugins: [
     // MDX must run before the React plugin so its JSX output gets transformed.
     {
