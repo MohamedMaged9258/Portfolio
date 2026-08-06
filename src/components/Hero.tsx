@@ -47,7 +47,7 @@ export default function Hero() {
           </div>
 
           {/* Portrait */}
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-2 lg:order-first">
             <div className="relative mx-auto w-full max-w-[16rem] lg:max-w-none">
               {/* ambient accent glow */}
               <div className="absolute -inset-4 -z-10 rounded-full bg-accent/10 blur-3xl" aria-hidden />
