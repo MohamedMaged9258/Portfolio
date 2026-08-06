@@ -17,18 +17,18 @@
   --ease-signal: cubic-bezier(0.16, 1, 0.3, 1); /* expo-out: arrives fast, settles */
   --ease-probe: cubic-bezier(0, 0, 0.2, 1);
 
-  --animate-scan: scan 14s linear infinite;
+  --animate-scan: scan 10s linear infinite;
   --animate-probe: probe 2.6s var(--ease-probe) infinite;
 
   /* Sweeps the accent grid's mask left→right. Travel is set so the band clears
-     both edges completely: with mask-size 200%, the band sits at 92%–108% of the
-     element minus the position value, so 114% → -14% enters and exits off-screen. */
+     both edges completely: with mask-size 200%, the band sits at 84%–116% of the
+     element minus the position value, so 118% → -18% enters and exits off-screen. */
   @keyframes scan {
     from {
-      mask-position: 114% 0;
+      mask-position: 118% 0;
     }
     to {
-      mask-position: -14% 0;
+      mask-position: -18% 0;
     }
   }
 
@@ -84,14 +84,23 @@
      so its dots stay in phase — translating the layer instead would drag its
      background with it and make the two grids shimmer against each other. */
   .bg-grid-scan {
-    background-image: radial-gradient(circle at 1px 1px, var(--color-accent) 1px, transparent 0);
-    background-size: 26px 26px;
-    opacity: 0.55;
-    mask-image: linear-gradient(90deg, transparent 46%, #000 50%, transparent 54%);
+    /* Dots are a touch larger than .bg-grid's 1px so a lit dot blooms past the
+       static one underneath, plus a faint wash so the band itself has presence. */
+    background-image:
+      radial-gradient(circle at 1px 1px, var(--color-accent) 1.5px, transparent 0),
+      linear-gradient(
+        0deg,
+        color-mix(in oklab, var(--color-accent) 7%, transparent),
+        color-mix(in oklab, var(--color-accent) 7%, transparent)
+      );
+    background-size:
+      26px 26px,
+      100% 100%;
+    mask-image: linear-gradient(90deg, transparent 42%, #000 48%, #000 52%, transparent 58%);
     mask-size: 200% 100%;
     mask-repeat: no-repeat;
     /* Parked off-screen so no sliver shows on the frame before the sweep starts. */
-    mask-position: 114% 0;
+    mask-position: 118% 0;
   }
 
   /* small monospace eyebrow label used on section headers */
