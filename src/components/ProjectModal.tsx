@@ -69,14 +69,19 @@ export default function ProjectModal() {
         // The backdrop is not a child, so clicks on it land on the dialog itself.
         if (e.target === dialogRef.current) close()
       }}
-      className="m-auto max-h-[85vh] w-[min(46rem,calc(100vw-2rem))] overflow-y-auto rounded-xl border border-line bg-bg p-0 text-slate-300 backdrop:bg-black/70 backdrop:backdrop-blur-sm"
+      // 64rem matches the site's max-w-5xl container, so the overlay reads as the
+      // same width as the page rather than an arbitrary box.
+      className="m-auto max-h-[88vh] w-[min(64rem,calc(100vw-2rem))] overflow-y-auto rounded-xl border border-line bg-bg p-0 text-slate-300 backdrop:bg-black/70 backdrop:backdrop-blur-sm"
     >
       <motion.div
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: 8 }}
         transition={{ duration: DUR.base, ease: EASE }}
-        className="relative p-6 sm:p-8"
+        // ProjectBody's article carries `prose max-w-none`, sized for the full page's
+        // narrow column. At this width that would run text to ~60rem lines, so the
+        // reading column is reined back in here while headings and meta stay full-width.
+        className="relative p-6 sm:p-8 [&_article]:max-w-3xl"
       >
         <button
           type="button"

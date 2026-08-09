@@ -8,7 +8,7 @@ import Wordmark from './Wordmark'
 import { cn } from '../lib/cn'
 import { DUR, EASE } from '../lib/motion'
 import { useActiveSection } from '../lib/useActiveSection'
-import { certificates } from '../lib/certificates'
+import { featuredCertificates } from '../lib/certificates'
 
 interface NavItem {
   /** Absolute and used verbatim — see the note below on why it isn't interpolated. */
@@ -19,24 +19,30 @@ interface NavItem {
 }
 
 /**
+ * Every item targets a homepage section — the nav is a tour of the home page, and
+ * the full /projects and /certificates listings are reached from each section's
+ * "View all" link rather than from here. The NavItem shape still supports plain page
+ * links (omit `sectionId`) should one be wanted later.
+ *
  * `to` holds the complete target rather than a bare "#about" the component prefixes.
  * The old shape built links as `/${item.href}`, which is correct only for a
- * "#"-prefixed value — "/certificates" through it yields "//certificates", a
+ * "#"-prefixed value — a "/certificates" entry through it yielded "//certificates", a
  * protocol-relative URL that points at an entirely different host.
  */
 const allNavItems: NavItem[] = [
   { to: '/#about', label: 'About', sectionId: 'about' },
   { to: '/#experience', label: 'Experience', sectionId: 'experience' },
-  { to: '/projects', label: 'Projects' },
-  { to: '/certificates', label: 'Certificates' },
+  { to: '/#projects', label: 'Projects', sectionId: 'projects' },
+  { to: '/#certificates', label: 'Certificates', sectionId: 'certificates' },
   { to: '/#skills', label: 'Skills', sectionId: 'skills' },
   { to: '/#contact', label: 'Contact', sectionId: 'contact' },
 ]
 
-// Hidden until there's something to show; adding the first entry to
-// data/certificates.json brings the tab back with no code change.
+// Gated on *featured* certificates, not all of them: this link points at the homepage
+// section, which itself only renders when there's something featured to put in it.
+// A tab scrolling to a section that isn't there would be a dead link.
 const navItems = allNavItems.filter(
-  (item) => item.to !== '/certificates' || certificates.length > 0,
+  (item) => item.sectionId !== 'certificates' || featuredCertificates.length > 0,
 )
 
 /** Module scope keeps the identity stable so useActiveSection's effect runs once. */
