@@ -6,8 +6,8 @@ Personal portfolio site. Live at **https://mohamedm.dpdns.org**.
 
 - **Vite + React + TypeScript**
 - **Tailwind CSS v4** (CSS-first tokens in `src/index.css`)
-- **MDX** for project write-ups
-- Deployed on **Cloudflare Pages**
+- **MDX** for project and certificate write-ups
+- Deployed on **Cloudflare Workers** (static assets)
 
 ## Content (no database — everything is static and in the repo)
 
@@ -16,23 +16,15 @@ Personal portfolio site. Live at **https://mohamedm.dpdns.org**.
 | CV data (about, experience, skills, education, contact) | `data/profile.json` |
 | Project write-ups (one file each) | `data/projects/*.mdx` |
 | Certificates (one file each) | `data/certificates/*.mdx` |
-| Downloadable CV | `data/assets/Mohamed_Maged_CV.pdf` |
-| Portrait | `data/assets/Profile.png` |
+| Static files (CV, portrait, images) | `data/assets/` → served from `/` |
 
-`data/assets/` is Vite's `publicDir`, so everything in it is served from the site root —
-`data/assets/Profile.png` is `/Profile.png`. Certificate images go in `data/assets/certs/`.
-
-Each project's frontmatter has a `layout` flag — `log` (long build-log) or `case-study` (short) —
-which controls how its detail page renders.
-
-Certificates use `title`, `slug`, `summary`, `issuer` and `date` (required), plus optional
-`credentialId`, `url`, `image`, `skills` and `featured`. Prose under the frontmatter is
-optional: write some and the card becomes clickable through to a detail view; leave it out
-and the card shows only its **Verify** link. `featured: true` is what puts an entry on the
-home page — without at least one, the Certificates nav tab and home section stay hidden.
+**→ [docs/CONTENT.md](docs/CONTENT.md) documents every field, what it does, and the
+authoring traps.** Read it before adding a project or certificate — in particular, the
+frontmatter syntax rule, which `npm run dev` does not enforce but the deploy does.
 
 To update the site: **edit a file, commit, push** — Cloudflare redeploys automatically
-(locally or straight in GitHub's web editor).
+(locally or straight in GitHub's web editor). Run `npm run build` first if you added or
+edited frontmatter; it's the only command that validates it.
 
 ## Develop
 

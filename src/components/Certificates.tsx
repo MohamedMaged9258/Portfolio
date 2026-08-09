@@ -7,7 +7,7 @@ import { stagger, viewportOnce } from '../lib/motion'
 
 export default function Certificates() {
   // Drops the whole section rather than rendering an empty grid. Adding a featured
-  // entry to data/certificates.json brings it back with no code change.
+  // entry to data/certificates/ brings it back with no code change.
   if (featuredCertificates.length === 0) return null
 
   return (
