@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from 'motion/react'
 import { Menu, X } from 'lucide-react'
 import Socials from './Socials'
@@ -8,17 +8,41 @@ import Wordmark from './Wordmark'
 import { cn } from '../lib/cn'
 import { DUR, EASE } from '../lib/motion'
 import { useActiveSection } from '../lib/useActiveSection'
+import { certificates } from '../lib/certificates'
 
-const sections = [
-  { href: '#about', label: 'About' },
-  { href: '#experience', label: 'Experience' },
-  { href: '#projects', label: 'Projects' },
-  { href: '#skills', label: 'Skills' },
-  { href: '#contact', label: 'Contact' },
+interface NavItem {
+  /** Absolute and used verbatim — see the note below on why it isn't interpolated. */
+  to: string
+  label: string
+  /** Present only for links that target a homepage section. */
+  sectionId?: string
+}
+
+/**
+ * `to` holds the complete target rather than a bare "#about" the component prefixes.
+ * The old shape built links as `/${item.href}`, which is correct only for a
+ * "#"-prefixed value — "/certificates" through it yields "//certificates", a
+ * protocol-relative URL that points at an entirely different host.
+ */
+const allNavItems: NavItem[] = [
+  { to: '/#about', label: 'About', sectionId: 'about' },
+  { to: '/#experience', label: 'Experience', sectionId: 'experience' },
+  { to: '/projects', label: 'Projects' },
+  { to: '/certificates', label: 'Certificates' },
+  { to: '/#skills', label: 'Skills', sectionId: 'skills' },
+  { to: '/#contact', label: 'Contact', sectionId: 'contact' },
 ]
 
+// Hidden until there's something to show; adding the first entry to
+// data/certificates.json brings the tab back with no code change.
+const navItems = allNavItems.filter(
+  (item) => item.to !== '/certificates' || certificates.length > 0,
+)
+
 /** Module scope keeps the identity stable so useActiveSection's effect runs once. */
-const sectionIds = sections.map((s) => s.href.slice(1))
+const sectionIds = navItems
+  .map((item) => item.sectionId)
+  .filter((id): id is string => id !== undefined)
 
 /**
  * The one header, on every route.
@@ -36,6 +60,18 @@ export default function SiteHeader() {
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const active = useActiveSection(sectionIds)
+  const { pathname } = useLocation()
+
+  /**
+   * Section links track the scroll position; page links track the URL. The two can't
+   * both win — on "/" no page link matches, and on a page route useActiveSection
+   * finds no sections and returns null. The prefix test keeps Projects lit while the
+   * detail overlay is open at /projects/<slug>.
+   */
+  const isActive = (item: NavItem) =>
+    item.sectionId
+      ? active === item.sectionId
+      : pathname === item.to || pathname.startsWith(`${item.to}/`)
 
   const { scrollY } = useScroll()
   useMotionValueEvent(scrollY, 'change', (v) => setScrolled(v > 8))
@@ -54,21 +90,23 @@ export default function SiteHeader() {
       <nav className="mx-auto flex h-16 max-w-5xl items-center justify-between px-5 sm:px-8">
         <Wordmark />
 
-        <div className="hidden items-center gap-1 md:flex">
-          {sections.map((s) => {
-            const isActive = active === s.href.slice(1)
+        {/* lg, not md: six items plus Socials plus Résumé overflow the max-w-5xl bar
+            at 768px, so the 768–1024px band gets the mobile menu instead. */}
+        <div className="hidden items-center gap-1 lg:flex">
+          {navItems.map((item) => {
+            const activeItem = isActive(item)
             return (
               <Link
-                key={s.href}
-                to={`/${s.href}`}
-                aria-current={isActive ? 'true' : undefined}
+                key={item.to}
+                to={item.to}
+                aria-current={activeItem ? 'true' : undefined}
                 className={cn(
                   'relative rounded-md px-3 py-2 text-sm transition-colors',
-                  isActive ? 'text-slate-100' : 'text-slate-400 hover:text-slate-100',
+                  activeItem ? 'text-slate-100' : 'text-slate-400 hover:text-slate-100',
                 )}
               >
-                {s.label}
-                {isActive && (
+                {item.label}
+                {activeItem && (
                   <motion.span
                     layoutId="nav-active"
                     className="absolute inset-x-3 -bottom-px h-px bg-accent"
@@ -80,7 +118,7 @@ export default function SiteHeader() {
           })}
         </div>
 
-        <div className="hidden items-center gap-2 md:flex">
+        <div className="hidden items-center gap-2 lg:flex">
           <Socials />
           <ResumeButton />
         </div>
@@ -90,7 +128,7 @@ export default function SiteHeader() {
           onClick={() => setOpen((v) => !v)}
           aria-label={open ? 'Close menu' : 'Open menu'}
           aria-expanded={open}
-          className="grid h-9 w-9 place-items-center rounded-md text-slate-300 transition hover:bg-elevated md:hidden"
+          className="grid h-9 w-9 place-items-center rounded-md text-slate-300 transition hover:bg-elevated lg:hidden"
         >
           <AnimatePresence mode="wait" initial={false}>
             <motion.span
@@ -113,7 +151,7 @@ export default function SiteHeader() {
             key="mobile-menu"
             // The border lives on the inner wrapper — on this collapsing element it
             // would still paint a stray 1px rule at height 0.
-            className="overflow-hidden md:hidden"
+            className="overflow-hidden lg:hidden"
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
@@ -122,14 +160,17 @@ export default function SiteHeader() {
             <div className="border-t border-line bg-bg">
               <div className="mx-auto max-w-5xl px-5 py-4 sm:px-8">
                 <div className="flex flex-col">
-                  {sections.map((s) => (
+                  {navItems.map((item) => (
                     <Link
-                      key={s.href}
-                      to={`/${s.href}`}
+                      key={item.to}
+                      to={item.to}
                       onClick={() => setOpen(false)}
-                      className="rounded-md px-2 py-2.5 text-sm text-slate-300 transition hover:bg-elevated hover:text-white"
+                      className={cn(
+                        'rounded-md px-2 py-2.5 text-sm transition hover:bg-elevated hover:text-white',
+                        isActive(item) ? 'text-slate-100' : 'text-slate-300',
+                      )}
                     >
-                      {s.label}
+                      {item.label}
                     </Link>
                   ))}
                 </div>

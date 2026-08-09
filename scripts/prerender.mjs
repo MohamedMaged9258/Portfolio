@@ -3,23 +3,25 @@ import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 /**
- * Emits a real HTML file per project route, with its <head> already filled in.
+ * Emits a real HTML file per route, with its <head> already filled in.
  *
  * useDocumentMeta sets these tags client-side, which is enough for crawlers that run
  * JS (Google) but not for social scrapers (X, LinkedIn, Discord, Slack) — they read
- * the served HTML and stop, so every project link would unfurl as the homepage card.
+ * the served HTML and stop, so every link would unfurl as the homepage card.
  *
- * Cloudflare's asset matching serves dist/projects/<slug>/index.html directly for
- * /projects/<slug>, ahead of the single-page-application fallback, so scrapers get
- * the right tags while the SPA still boots and routes exactly as before.
+ * Cloudflare's asset matching serves dist/<path>/index.html directly, ahead of the
+ * single-page-application fallback, so scrapers get the right tags while the SPA
+ * still boots and routes exactly as before.
  */
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const dist = join(root, 'dist')
-const projectsDir = join(root, 'data', 'projects')
+const dataDir = join(root, 'data')
 
 // Keep in step with SITE in src/lib/useDocumentMeta.ts.
 const SITE = 'https://mohamedm.dpdns.org'
+
+const profile = JSON.parse(readFileSync(join(dataDir, 'profile.json'), 'utf8'))
 
 /**
  * Pulls the scalar fields we need out of the YAML frontmatter block. Deliberately
@@ -44,7 +46,7 @@ const escapeAttr = (s) =>
 /**
  * `[^>]*` spans newlines, so this also matches the multi-line tags in index.html.
  * Throws on a miss — a silently un-rewritten tag would ship the homepage's metadata
- * under a project URL, which is the exact bug this script exists to prevent.
+ * under another URL, which is the exact bug this script exists to prevent.
  */
 function replaceTag(html, pattern, replacement) {
   if (!pattern.test(html)) throw new Error(`prerender: no match for ${pattern}`)
@@ -53,21 +55,18 @@ function replaceTag(html, pattern, replacement) {
 
 const template = readFileSync(join(dist, 'index.html'), 'utf8')
 
-const projects = readdirSync(projectsDir)
-  .filter((f) => f.endsWith('.mdx'))
-  .map((f) => readFrontmatter(join(projectsDir, f)))
-
-for (const { title, slug, summary } of projects) {
-  const pageTitle = escapeAttr(`${title} — Mohamed Maged`)
-  const description = escapeAttr(summary)
-  const url = `${SITE}/projects/${slug}`
+/** Writes one route's HTML. `path` is the route, e.g. "/projects/homelab". */
+function emit({ path, title, description }) {
+  const pageTitle = escapeAttr(title)
+  const desc = escapeAttr(description)
+  const url = `${SITE}${path}`
 
   let html = template
   html = replaceTag(html, /<title>[^<]*<\/title>/, `<title>${pageTitle}</title>`)
   html = replaceTag(
     html,
     /<meta\s[^>]*name="description"[^>]*>/,
-    `<meta name="description" content="${description}" />`,
+    `<meta name="description" content="${desc}" />`,
   )
   html = replaceTag(
     html,
@@ -77,7 +76,7 @@ for (const { title, slug, summary } of projects) {
   html = replaceTag(
     html,
     /<meta\s[^>]*property="og:description"[^>]*>/,
-    `<meta property="og:description" content="${description}" />`,
+    `<meta property="og:description" content="${desc}" />`,
   )
   html = replaceTag(
     html,
@@ -92,7 +91,7 @@ for (const { title, slug, summary } of projects) {
   html = replaceTag(
     html,
     /<meta\s[^>]*name="twitter:description"[^>]*>/,
-    `<meta name="twitter:description" content="${description}" />`,
+    `<meta name="twitter:description" content="${desc}" />`,
   )
   html = replaceTag(
     html,
@@ -100,9 +99,37 @@ for (const { title, slug, summary } of projects) {
     `<link rel="canonical" href="${url}" />`,
   )
 
-  const outDir = join(dist, 'projects', slug)
+  // Leading "/" would make join() treat the path as absolute and discard dist.
+  const outDir = join(dist, path.replace(/^\//, ''))
   mkdirSync(outDir, { recursive: true })
   writeFileSync(join(outDir, 'index.html'), html)
 }
 
-console.log(`prerendered ${projects.length} project routes`)
+const projects = readdirSync(join(dataDir, 'projects'))
+  .filter((f) => f.endsWith('.mdx'))
+  .map((f) => readFrontmatter(join(dataDir, 'projects', f)))
+
+const pages = [
+  // Index routes. Titles come from profile.json so they can't drift from the site.
+  {
+    path: '/projects',
+    title: `Projects — ${profile.name}`,
+    description: `Case studies and build logs from ${profile.name} — ${profile.title}.`,
+  },
+  {
+    path: '/certificates',
+    title: `Certificates — ${profile.name}`,
+    description: `Courses and credentials completed by ${profile.name}.`,
+  },
+  // One per project. dist/projects/index.html and dist/projects/<slug>/index.html
+  // are different paths, so the index above and these coexist.
+  ...projects.map(({ title, slug, summary }) => ({
+    path: `/projects/${slug}`,
+    title: `${title} — ${profile.name}`,
+    description: summary,
+  })),
+]
+
+for (const page of pages) emit(page)
+
+console.log(`prerendered ${pages.length} routes`)

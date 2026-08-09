@@ -3,6 +3,7 @@ import Hero from '../components/Hero'
 import About from '../components/About'
 import Experience from '../components/Experience'
 import Projects from '../components/Projects'
+import Certificates from '../components/Certificates'
 import Skills from '../components/Skills'
 import Contact from '../components/Contact'
 import Footer from '../components/Footer'
@@ -27,6 +28,8 @@ export default function Home() {
         <About />
         <Experience />
         <Projects />
+        {/* Renders nothing while data/certificates.json has no featured entries. */}
+        <Certificates />
         <Skills />
         <Contact />
       </main>
