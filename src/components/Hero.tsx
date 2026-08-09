@@ -1,4 +1,5 @@
 import { useRef } from 'react'
+import { Link } from 'react-router-dom'
 import { motion, useInView } from 'motion/react'
 import { MapPin, ArrowUpRight } from 'lucide-react'
 import Container from './Container'
@@ -75,13 +76,15 @@ export default function Hero() {
             </motion.div>
 
             <motion.div variants={rise} className="mt-8 flex flex-wrap items-center gap-3">
-              <a
-                href="#projects"
+              {/* A Link, not an anchor: a bare href="#projects" would scroll natively
+                  and set location.hash, racing useScrollToHash's own scroll. */}
+              <Link
+                to="/#projects"
                 className="inline-flex items-center gap-2 rounded-md bg-accent px-4 py-2.5 text-sm font-semibold text-bg transition hover:brightness-110"
               >
                 View projects
                 <ArrowUpRight className="h-4 w-4" />
-              </a>
+              </Link>
               <ResumeButton />
               <Socials className="ml-1" />
             </motion.div>

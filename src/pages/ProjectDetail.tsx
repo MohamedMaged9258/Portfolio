@@ -1,44 +1,61 @@
-import { useParams, Link, Navigate } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 import { MDXProvider } from '@mdx-js/react'
 import { ArrowLeft, ExternalLink } from 'lucide-react'
 import { FaGithub } from 'react-icons/fa6'
 import Container from '../components/Container'
 import Footer from '../components/Footer'
+import SiteHeader from '../components/SiteHeader'
 import PageTransition from '../components/PageTransition'
 import { mdxComponents } from '../components/mdxComponents'
+import NotFound from './NotFound'
 import { getProject } from '../lib/projects'
+import { useDocumentMeta } from '../lib/useDocumentMeta'
+import { profile } from '../lib/profile'
 import { cn } from '../lib/cn'
 
 export default function ProjectDetail() {
   const { slug } = useParams()
   const project = slug ? getProject(slug) : undefined
 
-  if (!project) return <Navigate to="/" replace />
+  // An unknown slug says so rather than silently teleporting home, which left the
+  // reader with no idea the link was broken.
+  if (!project) return <NotFound />
 
+  return <ProjectPage project={project} />
+}
+
+/**
+ * Split out so useDocumentMeta sits above the missing-project bail — calling it in
+ * ProjectDetail would put a hook after a conditional return.
+ */
+function ProjectPage({ project }: { project: NonNullable<ReturnType<typeof getProject>> }) {
   const { Component, layout, links } = project
   const isLog = layout === 'log'
 
+  useDocumentMeta({
+    title: `${project.title} — ${profile.name}`,
+    description: project.summary,
+    path: `/projects/${project.slug}`,
+  })
+
   return (
     <PageTransition>
-      <header className="sticky top-0 z-50 border-b border-line/70 bg-bg/80 backdrop-blur">
-        <Container className="flex h-16 items-center justify-between">
-          <Link
-            to="/#projects"
-            className="inline-flex items-center gap-2 font-mono text-sm text-slate-400 transition hover:text-accent"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            back
-          </Link>
-          <Link to="/" className="font-mono text-sm text-slate-300">
-            mohamed<span className="text-accent">.</span>maged
-          </Link>
-        </Container>
-      </header>
+      <SiteHeader />
 
       <main>
         <Container className="py-12 sm:py-16">
           <div className="mx-auto max-w-2xl">
-            <p className="eyebrow">{isLog ? '// build log' : '// case study'}</p>
+            {/* Back sits with the article, not in the bar — the shared header already
+                carries the full nav and a third cluster crowded it. */}
+            <Link
+              to="/#projects"
+              className="inline-flex items-center gap-2 font-mono text-sm text-slate-400 transition hover:text-accent"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              back to projects
+            </Link>
+
+            <p className="eyebrow mt-8">{isLog ? '// build log' : '// case study'}</p>
             <h1 className="mt-3 text-3xl font-bold tracking-tight text-slate-50 sm:text-4xl">
               {project.title}
             </h1>

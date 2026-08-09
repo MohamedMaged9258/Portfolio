@@ -6,8 +6,13 @@
   "compatibility_date": "2026-08-05",
   "assets": {
     "directory": "./dist",
-    // SPA fallback: serve index.html for unknown routes (e.g. /projects/homelab)
-    // so client-side routing works. Replaces the classic Pages _redirects file.
+    // Resolves an extensionless /projects/homelab to projects/homelab/index.html.
+    // This is the default, but scripts/prerender.mjs depends on it for social-scraper
+    // metadata to be served at all, so it's pinned rather than left implicit.
+    "html_handling": "auto-trailing-slash",
+    // Fallback for routes with no prerendered file (e.g. a mistyped URL): serve
+    // index.html so client-side routing still boots. Replaces the classic
+    // Pages _redirects file. Prerendered project routes match above and never reach this.
     "not_found_handling": "single-page-application"
   }
 }

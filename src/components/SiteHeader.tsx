@@ -4,6 +4,7 @@ import { AnimatePresence, motion, useMotionValueEvent, useScroll } from 'motion/
 import { Menu, X } from 'lucide-react'
 import Socials from './Socials'
 import ResumeButton from './ResumeButton'
+import Wordmark from './Wordmark'
 import { cn } from '../lib/cn'
 import { DUR, EASE } from '../lib/motion'
 import { useActiveSection } from '../lib/useActiveSection'
@@ -19,7 +20,19 @@ const sections = [
 /** Module scope keeps the identity stable so useActiveSection's effect runs once. */
 const sectionIds = sections.map((s) => s.href.slice(1))
 
-export default function Nav() {
+/**
+ * The one header, on every route.
+ *
+ * Section links are router <Link>s rather than bare `href="#about"` anchors, even on
+ * the home route. A bare anchor scrolls natively *and* updates location.hash, which
+ * would set useScrollToHash off as well — two scrolls racing. Link preventDefaults,
+ * leaving that hook as the only thing that moves the page. It also means the links
+ * work from a project page, where they now navigate home first.
+ *
+ * On non-home routes useActiveSection finds no sections and returns null, so no
+ * underline shows — which is correct there.
+ */
+export default function SiteHeader() {
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const active = useActiveSection(sectionIds)
@@ -39,20 +52,15 @@ export default function Nav() {
       )}
     >
       <nav className="mx-auto flex h-16 max-w-5xl items-center justify-between px-5 sm:px-8">
-        <Link to="/" className="inline-flex items-center gap-2 font-mono text-sm text-slate-200">
-          <span className="grid h-7 w-7 place-items-center rounded-md border border-line bg-surface text-accent">M</span>
-          <span className="hidden sm:inline">
-            mohamed<span className="text-accent">.</span>maged
-          </span>
-        </Link>
+        <Wordmark />
 
         <div className="hidden items-center gap-1 md:flex">
           {sections.map((s) => {
             const isActive = active === s.href.slice(1)
             return (
-              <a
+              <Link
                 key={s.href}
-                href={s.href}
+                to={`/${s.href}`}
                 aria-current={isActive ? 'true' : undefined}
                 className={cn(
                   'relative rounded-md px-3 py-2 text-sm transition-colors',
@@ -67,7 +75,7 @@ export default function Nav() {
                     transition={{ type: 'spring', stiffness: 400, damping: 34 }}
                   />
                 )}
-              </a>
+              </Link>
             )
           })}
         </div>
@@ -115,14 +123,14 @@ export default function Nav() {
               <div className="mx-auto max-w-5xl px-5 py-4 sm:px-8">
                 <div className="flex flex-col">
                   {sections.map((s) => (
-                    <a
+                    <Link
                       key={s.href}
-                      href={s.href}
+                      to={`/${s.href}`}
                       onClick={() => setOpen(false)}
                       className="rounded-md px-2 py-2.5 text-sm text-slate-300 transition hover:bg-elevated hover:text-white"
                     >
                       {s.label}
-                    </a>
+                    </Link>
                   ))}
                 </div>
                 <div className="mt-4 flex items-center justify-between border-t border-line pt-4">
