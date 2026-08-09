@@ -8,8 +8,10 @@ import Home from './pages/Home'
 const ProjectsIndex = lazy(() => import('./pages/ProjectsIndex'))
 const ProjectDetail = lazy(() => import('./pages/ProjectDetail'))
 const CertificatesIndex = lazy(() => import('./pages/CertificatesIndex'))
+const CertificateDetail = lazy(() => import('./pages/CertificateDetail'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 const ProjectModal = lazy(() => import('./components/ProjectModal'))
+const CertificateModal = lazy(() => import('./components/CertificateModal'))
 
 export default function App() {
   const location = useLocation()
@@ -57,6 +59,7 @@ export default function App() {
             <Route path="/projects" element={<ProjectsIndex />} />
             <Route path="/projects/:slug" element={<ProjectDetail />} />
             <Route path="/certificates" element={<CertificatesIndex />} />
+            <Route path="/certificates/:slug" element={<CertificateDetail />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
@@ -66,9 +69,10 @@ export default function App() {
           <dialog> is removed from the DOM, which is what closes it. */}
       <AnimatePresence>
         {background && (
-          <Suspense key="project-overlay" fallback={null}>
+          <Suspense key="detail-overlay" fallback={null}>
             <Routes location={location}>
               <Route path="/projects/:slug" element={<ProjectModal />} />
+              <Route path="/certificates/:slug" element={<CertificateModal />} />
             </Routes>
           </Suspense>
         )}

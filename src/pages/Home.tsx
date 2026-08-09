@@ -28,7 +28,7 @@ export default function Home() {
         <About />
         <Experience />
         <Projects />
-        {/* Renders nothing while data/certificates.json has no featured entries. */}
+        {/* Renders nothing while no data/certificates/*.mdx is marked featured. */}
         <Certificates />
         <Skills />
         <Contact />

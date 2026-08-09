@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync, mkdirSync, readdirSync } from 'node:fs'
+import { readFileSync, writeFileSync, mkdirSync, readdirSync, existsSync } from 'node:fs'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -105,9 +105,24 @@ function emit({ path, title, description }) {
   writeFileSync(join(outDir, 'index.html'), html)
 }
 
-const projects = readdirSync(join(dataDir, 'projects'))
-  .filter((f) => f.endsWith('.mdx'))
-  .map((f) => readFrontmatter(join(dataDir, 'projects', f)))
+/**
+ * Frontmatter for every .mdx in a data/ collection.
+ *
+ * The existsSync guard is load-bearing: readdirSync on a missing path throws ENOENT,
+ * which would fail the whole build rather than degrade. A collection directory can
+ * legitimately be absent — git tracks files, not directories, so one holding nothing
+ * but ignored content wouldn't survive a fresh checkout.
+ */
+function collection(name) {
+  const dir = join(dataDir, name)
+  if (!existsSync(dir)) return []
+  return readdirSync(dir)
+    .filter((f) => f.endsWith('.mdx'))
+    .map((f) => readFrontmatter(join(dir, f)))
+}
+
+const projects = collection('projects')
+const certificates = collection('certificates')
 
 const pages = [
   // Index routes. Titles come from profile.json so they can't drift from the site.
@@ -121,10 +136,17 @@ const pages = [
     title: `Certificates — ${profile.name}`,
     description: `Courses and credentials completed by ${profile.name}.`,
   },
-  // One per project. dist/projects/index.html and dist/projects/<slug>/index.html
-  // are different paths, so the index above and these coexist.
+  // One per entry. dist/projects/index.html and dist/projects/<slug>/index.html are
+  // different paths, so the indexes above and these coexist.
   ...projects.map(({ title, slug, summary }) => ({
     path: `/projects/${slug}`,
+    title: `${title} — ${profile.name}`,
+    description: summary,
+  })),
+  // Emitted for every certificate, including ones with no write-up — their detail
+  // route resolves even though no card links to it.
+  ...certificates.map(({ title, slug, summary }) => ({
+    path: `/certificates/${slug}`,
     title: `${title} — ${profile.name}`,
     description: summary,
   })),

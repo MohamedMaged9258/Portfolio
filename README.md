@@ -13,14 +13,26 @@ Personal portfolio site. Live at **https://mohamedm.dpdns.org**.
 
 | What | Where |
 |------|-------|
-| CV data (about, experience, skills, education, contact) | `src/content/profile.json` |
-| Project write-ups (one file each) | `src/content/projects/*.mdx` |
-| Downloadable CV | `public/Mohamed_Maged_CV.pdf` |
-| Portrait | `public/Profile.png` |
+| CV data (about, experience, skills, education, contact) | `data/profile.json` |
+| Project write-ups (one file each) | `data/projects/*.mdx` |
+| Certificates (one file each) | `data/certificates/*.mdx` |
+| Downloadable CV | `data/assets/Mohamed_Maged_CV.pdf` |
+| Portrait | `data/assets/Profile.png` |
+
+`data/assets/` is Vite's `publicDir`, so everything in it is served from the site root —
+`data/assets/Profile.png` is `/Profile.png`. Certificate images go in `data/assets/certs/`.
 
 Each project's frontmatter has a `layout` flag — `log` (long build-log) or `case-study` (short) —
-which controls how its detail page renders. To update the site: **edit a file, commit, push** —
-Cloudflare Pages redeploys automatically (locally or straight in GitHub's web editor).
+which controls how its detail page renders.
+
+Certificates use `title`, `slug`, `summary`, `issuer` and `date` (required), plus optional
+`credentialId`, `url`, `image`, `skills` and `featured`. Prose under the frontmatter is
+optional: write some and the card becomes clickable through to a detail view; leave it out
+and the card shows only its **Verify** link. `featured: true` is what puts an entry on the
+home page — without at least one, the Certificates nav tab and home section stay hidden.
+
+To update the site: **edit a file, commit, push** — Cloudflare redeploys automatically
+(locally or straight in GitHub's web editor).
 
 ## Develop
 

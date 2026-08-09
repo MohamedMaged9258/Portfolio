@@ -52,7 +52,7 @@ export default function CertificatesIndex() {
               variants={stagger(0.08)}
             >
               {certificates.map((c) => (
-                <CertificateCard key={`${c.issuer}-${c.name}`} certificate={c} />
+                <CertificateCard key={c.slug} certificate={c} />
               ))}
             </motion.div>
           )}

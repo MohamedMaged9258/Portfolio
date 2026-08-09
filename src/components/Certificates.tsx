@@ -25,7 +25,7 @@ export default function Certificates() {
         variants={stagger(0.08)}
       >
         {featuredCertificates.map((c) => (
-          <CertificateCard key={`${c.issuer}-${c.name}`} certificate={c} />
+          <CertificateCard key={c.slug} certificate={c} />
         ))}
       </motion.div>
     </Section>
