@@ -14,6 +14,7 @@ Personal portfolio site. Live at **https://mohamedm.dpdns.org**.
 | What | Where |
 |------|-------|
 | CV data (about, experience, skills, education, contact) | `data/profile.json` |
+| The production URL — canonicals, sitemap, JSON-LD all derive from it | `site` in `data/profile.json` |
 | Project write-ups (one file each) | `data/projects/*.mdx` |
 | Certificates (one file each) | `data/certificates/*.mdx` |
 | Static files (CV, portrait, images) | `data/assets/` → served from `/` |
@@ -21,6 +22,10 @@ Personal portfolio site. Live at **https://mohamedm.dpdns.org**.
 **→ [docs/CONTENT.md](docs/CONTENT.md) documents every field, what it does, and the
 authoring traps.** Read it before adding a project or certificate — in particular, the
 frontmatter syntax rule, which `npm run dev` does not enforce but the deploy does.
+
+**→ [docs/SEO.md](docs/SEO.md) covers how the site gets found**, what the build generates
+(`sitemap.xml`, `robots.txt`, JSON-LD, per-route HTML), and the off-site checklist —
+Search Console, LinkedIn, GitHub — that has to be done by hand.
 
 To update the site: **edit a file, commit, push** — Cloudflare redeploys automatically
 (locally or straight in GitHub's web editor). Run `npm run build` first if you added or
@@ -36,10 +41,19 @@ npm run preview    # preview the production build
 npm run typecheck  # type-check with tsc
 ```
 
+`npm run build` is three steps: the client build, a second **SSR build** of
+`src/entry-server.tsx` into `dist-ssr/`, then `scripts/prerender.mjs`. That last step
+renders every route to real HTML, fills in its `<head>`, and writes `sitemap.xml`,
+`robots.txt` and `404.html`. The app hydrates that markup rather than building the page
+from scratch, so `src/main.tsx` and `src/entry-server.tsx` have to stay in step.
+
 ## Deploy (Cloudflare Workers — static assets)
 
 Cloudflare builds on every push and runs `npx wrangler deploy`. Config is in `wrangler.jsonc`:
 
 - Assets served from `dist/`
 - Build command (Cloudflare project setting): `npm run build`
-- SPA deep-links (e.g. `/projects/homelab`) handled by `assets.not_found_handling: "single-page-application"`
+- Deep-links (e.g. `/projects/homelab`) are real prerendered files, matched directly by
+  `assets.html_handling: "auto-trailing-slash"`
+- Anything else falls through to `assets.not_found_handling: "404-page"`, which serves
+  `dist/404.html` with a genuine 404 status — the app still boots and renders `NotFound`

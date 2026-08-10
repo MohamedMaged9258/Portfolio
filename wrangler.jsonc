@@ -11,8 +11,10 @@
     // metadata to be served at all, so it's pinned rather than left implicit.
     "html_handling": "auto-trailing-slash",
     // Fallback for routes with no prerendered file (e.g. a mistyped URL): serve
-    // index.html so client-side routing still boots. Replaces the classic
-    // Pages _redirects file. Prerendered project routes match above and never reach this.
-    "not_found_handling": "single-page-application"
+    // dist/404.html with a real 404 status. "single-page-application" returned 200 for
+    // every unknown URL — a soft 404 that wasted crawl budget and made /robots.txt
+    // resolve to the HTML shell. Every genuine route is emitted as its own file by
+    // scripts/prerender.mjs and matches above, so nothing real reaches this.
+    "not_found_handling": "404-page"
   }
 }

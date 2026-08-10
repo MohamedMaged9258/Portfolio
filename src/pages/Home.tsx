@@ -16,7 +16,9 @@ export default function Home() {
   // from the Hero the way index.html's hardcoded copy did.
   useDocumentMeta({
     title: `${profile.name} — ${profile.title}`,
-    description: profile.tagline,
+    // seoDescription, not tagline: the tagline is hero copy and too short to carry the
+    // name and the qualifier terms a search result needs. Matches what prerender emits.
+    description: profile.seoDescription,
     path: '/',
   })
 

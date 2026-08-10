@@ -1,7 +1,5 @@
 import { useEffect } from 'react'
-
-const SITE = 'https://mohamedm.dpdns.org'
-const DEFAULT_IMAGE = '/Profile.png'
+import { SITE, DEFAULT_IMAGE } from './site'
 
 export interface DocumentMeta {
   title: string
@@ -37,12 +35,16 @@ function setCanonical(href: string) {
 
 /**
  * Per-route <head> management, done imperatively — react-helmet isn't a dependency
- * and isn't worth adding for three routes. index.html keeps its tags as the pre-JS
- * default; each route overwrites them on mount.
+ * and isn't worth adding for six routes.
  *
- * Client-side only, so this reaches crawlers that execute JS (Google) but not social
- * scrapers (X, LinkedIn, Discord, Slack), which read the static index.html. Fixing
- * those unfurls needs per-route HTML emitted at build time.
+ * This is no longer what crawlers read: scripts/prerender.mjs bakes the correct tags
+ * into every route's HTML at build time, so the first paint is already right and social
+ * scrapers get real per-page unfurls. What's left for this hook is client-side
+ * *navigation* — following a link swaps the route without a document load, and nothing
+ * else would update the title or canonical for the new URL.
+ *
+ * Values here must stay in step with the ones prerender.mjs emits for the same route,
+ * or the tab title will change under the visitor a moment after the page settles.
  */
 export function useDocumentMeta({ title, description, path, image, noindex }: DocumentMeta) {
   useEffect(() => {

@@ -54,6 +54,11 @@ export default function App() {
             fallback={null} rather than a spinner: the chunks are small and same-origin,
             so anything visible here would only ever flash. */}
         <Suspense key={(background ?? location).pathname} fallback={null}>
+          {/* Adding a route here is only half the job: wrangler.jsonc now serves a real
+              404 for any path with no prerendered file, so a new route also needs an
+              entry in scripts/prerender.mjs or it will only work via in-app navigation
+              and 404 on a direct visit. The two :slug routes are already covered — that
+              script emits one file per entry in each data/ collection. */}
           <Routes location={background ?? location}>
             <Route path="/" element={<Home />} />
             <Route path="/projects" element={<ProjectsIndex />} />

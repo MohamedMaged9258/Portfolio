@@ -14,6 +14,10 @@ export default function CertificatesIndex() {
     title: `Certificates — ${profile.name}`,
     description: `Courses and credentials completed by ${profile.name}.`,
     path: '/certificates',
+    // A listing with nothing on it is a thin page, and while the collection is empty
+    // nothing links here either. Keep it out of the index until it has content — this
+    // mirrors what scripts/prerender.mjs writes into the served HTML.
+    noindex: certificates.length === 0,
   })
 
   return (

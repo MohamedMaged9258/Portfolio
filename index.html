@@ -4,32 +4,66 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!--
+      Every tag below is a *default* that scripts/prerender.mjs rewrites per route at
+      build time. Edit shapes carefully: the script matches these by attribute and throws
+      if a match disappears, so a renamed attribute fails the build rather than silently
+      shipping the homepage's metadata under another URL.
+    -->
     <title>Mohamed Maged — AIOps Engineer</title>
     <meta
       name="description"
-      content="Mohamed Maged — Computer Engineering student and AIOps engineer building across mobile, AI/ML, and infrastructure. Projects, experience, and CV."
+      content="Mohamed Maged — AIOps Engineer and AI Engineering student in Egypt. Flutter apps, machine learning, Docker and Linux infrastructure. Projects, CV and contact."
     />
+    <meta name="author" content="Mohamed Maged" />
+    <meta name="robots" content="index, follow" />
     <meta name="theme-color" content="#0a0e14" />
     <link rel="canonical" href="https://mohamedm.dpdns.org/" />
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Mohamed Maged" />
+    <meta property="og:locale" content="en_US" />
     <meta property="og:title" content="Mohamed Maged — AIOps Engineer" />
     <meta
       property="og:description"
-      content="Computer Engineering student building across mobile, AI/ML, and infrastructure."
+      content="AI Engineering student building across mobile, AI/ML, and infrastructure."
     />
     <meta property="og:url" content="https://mohamedm.dpdns.org/" />
     <meta property="og:image" content="https://mohamedm.dpdns.org/Profile.png" />
+    <meta property="og:image:width" content="848" />
+    <meta property="og:image:height" content="1264" />
+    <meta property="og:image:alt" content="Mohamed Maged" />
 
     <!-- Twitter -->
-    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="Mohamed Maged — AIOps Engineer" />
     <meta
       name="twitter:description"
-      content="Computer Engineering student building across mobile, AI/ML, and infrastructure."
+      content="AI Engineering student building across mobile, AI/ML, and infrastructure."
     />
     <meta name="twitter:image" content="https://mohamedm.dpdns.org/Profile.png" />
+    <meta name="twitter:image:alt" content="Mohamed Maged" />
+
+    <!--
+      The prerendered markup carries motion's `initial` values as inline styles, so
+      without JS every reveal stays at opacity:0 and the page reads as blank. Crawlers
+      that only extract text are unaffected, but anything that renders CSS without
+      running JS — and any human with scripting off — would see nothing.
+
+      Anchored selectors on purpose: a bare [style*="opacity:0"] would also match the
+      "opacity:0.55" the muted list markers use and blow them up to full strength.
+    -->
+    <noscript>
+      <style>
+        [style="opacity:0"],
+        [style^="opacity:0;"] {
+          opacity: 1 !important;
+          transform: none !important;
+        }
+      </style>
+    </noscript>
   </head>
   <body>
     <div id="root"></div>

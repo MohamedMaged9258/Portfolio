@@ -15,7 +15,10 @@ export default function Socials({ className }: { className?: string }) {
           key={label}
           href={href}
           target="_blank"
-          rel="noreferrer"
+          // rel="me" marks these as *the same person's* other profiles rather than
+          // arbitrary outbound links — the bidirectional half of the sameAs array in
+          // the JSON-LD that scripts/prerender.mjs emits.
+          rel="me noreferrer"
           aria-label={label}
           className="grid h-9 w-9 place-items-center rounded-md text-slate-400 transition hover:bg-elevated hover:text-accent"
         >

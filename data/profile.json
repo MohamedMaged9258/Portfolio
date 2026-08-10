@@ -1,7 +1,9 @@
 {
   "name": "Mohamed Maged",
   "title": "AIOps Engineer",
-  "tagline": "Computer Engineering student building across mobile, AI/ML, and infrastructure.",
+  "tagline": "AI Engineering student building across mobile, AI/ML, and infrastructure.",
+  "seoDescription": "Mohamed Maged — AIOps Engineer and AI Engineering student in Egypt. Flutter apps, machine learning, Docker and Linux infrastructure. Projects, CV and contact.",
+  "site": "https://mohamedm.dpdns.org",
   "location": "Egypt",
   "email": "mohamedmaged9258@gmail.com",
   "phone": "+201157094335",
@@ -40,10 +42,7 @@
     {
       "school": "Alamein International University",
       "degree": "B.S. in AI Engineering",
-      "period": "Sep 2022 – Jan 2027 (expected)",
-      "highlights": [
-        "Relevant coursework: Computer Architecture, Software Engineering, Cloud Computing."
-      ]
+      "period": "Sep 2022 – Jan 2027 (expected)"
     }
   ],
   "skills": [
