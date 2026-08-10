@@ -212,9 +212,11 @@ entries and pair a `ViewAllLink` with the section heading.
 Cloudflare Workers static assets, configured in `wrangler.jsonc`. Cloudflare runs
 `npm run build` then `npx wrangler deploy`, which uploads `dist/`.
 
-- `html_handling: "auto-trailing-slash"` resolves an extensionless `/projects/homelab` to
-  `projects/homelab/index.html`. It is the default, but it is pinned because the
-  prerendered metadata depends on it being served at all.
+- `html_handling: "drop-trailing-slash"` serves `projects/homelab/index.html` at the
+  extensionless `/projects/homelab` and redirects the trailing-slash form to it.
+  Explicitly **not** the `"auto-trailing-slash"` default, which for this file layout
+  treats `/projects/homelab/` as canonical and 307s the bare path to it — making a
+  redirect out of every URL the site publishes. See [SEO.md](SEO.md#trailing-slashes).
 - `not_found_handling: "404-page"` serves `dist/404.html` with a **real 404 status** for
   anything with no prerendered file. The previous `"single-page-application"` returned
   200 for every unknown URL — a soft 404 that wasted crawl budget and made

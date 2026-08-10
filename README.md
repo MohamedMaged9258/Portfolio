@@ -81,7 +81,8 @@ Cloudflare builds on every push and runs `npx wrangler deploy`. Config is in `wr
 
 - Assets served from `dist/`
 - Build command (Cloudflare project setting): `npm run build`
-- Deep-links (e.g. `/projects/homelab`) are real prerendered files, matched directly by
-  `assets.html_handling: "auto-trailing-slash"`
+- Deep-links (e.g. `/projects/homelab`) are real prerendered files, served at the
+  slash-less URL by `assets.html_handling: "drop-trailing-slash"` — the form every
+  canonical, `og:url` and sitemap entry uses. The trailing-slash form redirects to it
 - Anything else falls through to `assets.not_found_handling: "404-page"`, which serves
   `dist/404.html` with a genuine 404 status — the app still boots and renders `NotFound`

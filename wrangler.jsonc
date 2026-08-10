@@ -6,10 +6,16 @@
   "compatibility_date": "2026-08-05",
   "assets": {
     "directory": "./dist",
-    // Resolves an extensionless /projects/homelab to projects/homelab/index.html.
-    // This is the default, but scripts/prerender.mjs depends on it for social-scraper
-    // metadata to be served at all, so it's pinned rather than left implicit.
-    "html_handling": "auto-trailing-slash",
+    // Serves projects/homelab/index.html at the extensionless /projects/homelab, and
+    // redirects the trailing-slash form to it.
+    //
+    // NOT the "auto-trailing-slash" default, which does the opposite for this layout:
+    // it treats /projects/homelab/ as the canonical form and 307s the bare path to it.
+    // Every URL the site emits — canonical tags, og:url, sitemap.xml entries, JSON-LD
+    // @ids, internal links — is slash-less, so under the default every one of them was
+    // a redirect, and the page that did answer 200 declared a canonical pointing at a
+    // redirect. Google reports that as "Page with redirect" and indexes nothing.
+    "html_handling": "drop-trailing-slash",
     // Fallback for routes with no prerendered file (e.g. a mistyped URL): serve
     // dist/404.html with a real 404 status. "single-page-application" returned 200 for
     // every unknown URL — a soft 404 that wasted crawl budget and made /robots.txt
