@@ -56,8 +56,9 @@ never gets crawled in the first place. Everything above is wasted until this is 
      `<!-- Open Graph -->` comment. It is a plain tag; `prerender.mjs` will not touch it.
 3. **Sitemaps → Add a new sitemap →** enter `sitemap.xml` and submit.
 4. **URL Inspection →** paste `https://mohamedm.dpdns.org/` → **Request Indexing**.
-   Repeat for `/projects` and each project URL. This is the manual nudge that gets a
-   brand-new site into the crawl queue instead of waiting weeks to be discovered.
+   Repeat for `/projects` and each project URL — and for `/certificates` and its entries
+   once that collection has any. This is the manual nudge that gets a brand-new site into
+   the crawl queue instead of waiting weeks to be discovered.
 
 Check back in about a week: **Indexing → Pages** should show the URLs moving from
 "Discovered" to "Indexed".

@@ -196,11 +196,13 @@ So: mark at least one certificate `featured: true`, or the section is invisible.
 
 Standard Markdown. A few site-specific behaviours:
 
+**What you write appears in two places.** Clicking a card opens the write-up as an overlay panel over the listing; a pasted link, a refresh, or a shared link opens it as a full page. Same text either way, so open with a sentence that stands on its own — don't write "as you can see above", because in the overlay there is no above.
+
 **Links to other sites** — anything starting with `http` automatically opens in a new tab. You don't need to do anything.
 
 **Links within the site** — `[see this](/projects/homelab)` works, but causes a **full page reload** rather than a smooth transition. Fine occasionally; don't build navigation out of it.
 
-**Headings become link targets.** `## Why I built it` gets an id automatically, so `/projects/x#why-i-built-it` jumps straight there. Note that **renaming a heading breaks any link pointing at it**, and there's no visible anchor icon in the UI.
+**Headings become link targets.** `## Why I built it` gets an id automatically, so `/projects/x#why-i-built-it` jumps straight there. Following such a link opens the **full page**, not the overlay. Note that **renaming a heading breaks any link pointing at it**, and there's no visible anchor icon in the UI.
 
 **Images** in the body use the same root-relative paths as everywhere else: `![alt](/certs/my-cert.png)`.
 

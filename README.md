@@ -27,9 +27,37 @@ frontmatter syntax rule, which `npm run dev` does not enforce but the deploy doe
 (`sitemap.xml`, `robots.txt`, JSON-LD, per-route HTML), and the off-site checklist —
 Search Console, LinkedIn, GitHub — that has to be done by hand.
 
+**→ [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) explains how it all fits together** —
+routing, the overlay/page split, the prerender pipeline, and the MDX loading. Read it
+before changing code rather than content.
+
 To update the site: **edit a file, commit, push** — Cloudflare redeploys automatically
 (locally or straight in GitHub's web editor). Run `npm run build` first if you added or
 edited frontmatter; it's the only command that validates it.
+
+## Routes & rendering
+
+| Path | Page |
+|------|------|
+| `/` | Home — hero, about, experience, and **featured-only** previews of projects and certificates |
+| `/projects` | Every project |
+| `/projects/:slug` | A project write-up |
+| `/certificates` | Every certificate |
+| `/certificates/:slug` | A certificate write-up |
+| anything else | 404 — a real 404 status, not the app pretending |
+
+The home page shows only entries marked `featured: true`; each section's **View all**
+link leads to the full listing.
+
+**A write-up has two views.** Clicking a card opens it as an overlay (a native
+`<dialog>`) over the listing, leaving the page behind it mounted; a pasted link, a
+refresh, or a crawler gets the full page instead. `ProjectCard` marks the in-app click
+with `state={{ backgroundLocation }}` and `src/App.tsx` branches on it. Both render the
+same body component.
+
+**Adding a route is two edits.** A new `<Route>` in `src/App.tsx` also needs an entry in
+`scripts/prerender.mjs`, or it works in-app and 404s on a direct visit. The two `:slug`
+routes are already covered — the script emits one file per entry in each collection.
 
 ## Develop
 

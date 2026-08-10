@@ -8,8 +8,11 @@ import { useDocumentMeta } from '../lib/useDocumentMeta'
 import { profile } from '../lib/profile'
 
 /**
- * Note the status code stays 200: wrangler.jsonc serves index.html for unknown
- * paths so client routing works. The noindex keeps junk URLs out of search.
+ * Any URL with no prerendered file — a mistyped path or an unknown slug alike — is
+ * served as dist/404.html with a genuine 404 status by wrangler.jsonc, and this app
+ * boots inside it. ProjectDetail and CertificateDetail also render this directly when
+ * in-app routing lands on a slug that doesn't exist. The noindex is belt-and-braces
+ * for the second case, which carries whatever status its background page had.
  */
 export default function NotFound() {
   // The real path, not a made-up "/404" — this also renders for a bad project slug,
