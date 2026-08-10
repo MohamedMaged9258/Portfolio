@@ -1,7 +1,7 @@
 import { motion } from 'motion/react'
 import Section from './Section'
 import { profile } from '../lib/profile'
-import { rise, stagger, viewportOnce } from '../lib/motion'
+import { pop, rise, riseStagger, stagger, viewportOnce } from '../lib/motion'
 
 export default function About() {
   return (
@@ -24,13 +24,27 @@ export default function About() {
           {profile.education.map((ed) => (
             <motion.div
               key={ed.school}
-              variants={rise}
+              variants={riseStagger(0.04)}
               className="rounded-lg border border-line bg-surface p-4"
             >
               <p className="eyebrow">// education</p>
               <p className="mt-2 font-medium text-slate-100">{ed.degree}</p>
               <p className="text-sm text-slate-400">{ed.school}</p>
               <p className="mt-1 font-mono text-xs text-slate-500">{ed.period}</p>
+              {ed.highlights && ed.highlights.length > 0 && (
+                <ul className="mt-3 space-y-2">
+                  {ed.highlights.map((h, i) => (
+                    <motion.li
+                      key={i}
+                      variants={pop}
+                      className="flex gap-2.5 text-sm text-slate-400"
+                    >
+                      <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-slate-600" />
+                      <span>{h}</span>
+                    </motion.li>
+                  ))}
+                </ul>
+              )}
             </motion.div>
           ))}
 

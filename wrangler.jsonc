@@ -6,8 +6,15 @@
   "compatibility_date": "2026-08-05",
   "assets": {
     "directory": "./dist",
-    // SPA fallback: serve index.html for unknown routes (e.g. /projects/homelab)
-    // so client-side routing works. Replaces the classic Pages _redirects file.
-    "not_found_handling": "single-page-application"
+    // Resolves an extensionless /projects/homelab to projects/homelab/index.html.
+    // This is the default, but scripts/prerender.mjs depends on it for social-scraper
+    // metadata to be served at all, so it's pinned rather than left implicit.
+    "html_handling": "auto-trailing-slash",
+    // Fallback for routes with no prerendered file (e.g. a mistyped URL): serve
+    // dist/404.html with a real 404 status. "single-page-application" returned 200 for
+    // every unknown URL — a soft 404 that wasted crawl budget and made /robots.txt
+    // resolve to the HTML shell. Every genuine route is emitted as its own file by
+    // scripts/prerender.mjs and matches above, so nothing real reaches this.
+    "not_found_handling": "404-page"
   }
 }

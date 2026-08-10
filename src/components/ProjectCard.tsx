@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { motion } from 'motion/react'
 import { ArrowUpRight } from 'lucide-react'
 import type { Project } from '../lib/projects'
@@ -8,12 +8,17 @@ import { rise } from '../lib/motion'
 const MotionLink = motion.create(Link)
 
 export default function ProjectCard({ project }: { project: Project }) {
+  const location = useLocation()
   const layoutLabel = project.layout === 'log' ? 'Build log' : 'Case study'
   const extra = project.stack.length - 4
 
   return (
     <MotionLink
       to={`/projects/${project.slug}`}
+      // Marks this as an in-app click, which App reads to render the write-up as an
+      // overlay over the current page. A pasted or refreshed URL carries no state and
+      // so falls through to the full ProjectDetail page.
+      state={{ backgroundLocation: location }}
       variants={rise}
       // transition-colors, not transition: the bare utility also transitions
       // transform, which would fight motion's reveal animation on the same element.

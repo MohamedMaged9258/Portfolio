@@ -28,7 +28,12 @@ export interface LanguageItem {
 export interface Profile {
   name: string
   title: string
+  /** Hero copy. Short enough to read as a headline, so not reused as a meta description. */
   tagline: string
+  /** Home page meta/og description. Carries the name and the qualifier terms; ~155 chars. */
+  seoDescription: string
+  /** Canonical origin, no trailing slash. The one place the production URL is written. */
+  site: string
   location: string
   email: string
   phone: string

@@ -1,15 +1,38 @@
-import { Routes, Route, useLocation } from 'react-router-dom'
+import { Suspense, lazy } from 'react'
+import { Routes, Route, useLocation, type Location } from 'react-router-dom'
 import { AnimatePresence } from 'motion/react'
 import Home from './pages/Home'
-import ProjectDetail from './pages/ProjectDetail'
+
+// Home stays eager — it's the landing route. The secondary routes split off with
+// @mdx-js/react and mdxComponents behind them.
+const ProjectsIndex = lazy(() => import('./pages/ProjectsIndex'))
+const ProjectDetail = lazy(() => import('./pages/ProjectDetail'))
+const CertificatesIndex = lazy(() => import('./pages/CertificatesIndex'))
+const CertificateDetail = lazy(() => import('./pages/CertificateDetail'))
+const NotFound = lazy(() => import('./pages/NotFound'))
+const ProjectModal = lazy(() => import('./components/ProjectModal'))
+const CertificateModal = lazy(() => import('./components/CertificateModal'))
 
 export default function App() {
   const location = useLocation()
 
   /**
+   * Set by ProjectCard on an in-app click, and only then. Its presence is what
+   * distinguishes "opened from the listing" (show the write-up as an overlay, leave
+   * the page behind it mounted) from a direct visit, refresh or shared link (render
+   * the full ProjectDetail page).
+   */
+  const state = location.state as { backgroundLocation?: Location } | null
+  const background = state?.backgroundLocation
+
+  /**
    * Fires between the outgoing page's exit and the incoming page's enter. Resetting
    * on pathname change instead (the old ScrollToTop) would jump the page while the
-   * previous route is still animating out. In-page #anchors keep their position.
+   * previous route is still animating out. In-page #anchors keep their position —
+   * useScrollToHash (called from PageTransition) owns those.
+   *
+   * Opening or closing the overlay doesn't reach this: the page route is unchanged,
+   * so nothing exits and the listing keeps its scroll position.
    */
   const resetScroll = () => {
     if (location.hash) return
@@ -17,12 +40,48 @@ export default function App() {
   }
 
   return (
-    <AnimatePresence mode="wait" onExitComplete={resetScroll}>
-      <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<Home />} />
-        <Route path="/projects/:slug" element={<ProjectDetail />} />
-        <Route path="*" element={<Home />} />
-      </Routes>
-    </AnimatePresence>
+    <>
+      <AnimatePresence mode="wait" onExitComplete={resetScroll}>
+        {/* The key belongs on AnimatePresence's *direct* child, so it moved from
+            <Routes> to <Suspense> when the boundary was added — keyed one level down,
+            AnimatePresence sees a single unchanging child, and both the exit animation
+            and the onExitComplete scroll reset stop firing.
+
+            It keys off the *background* pathname when there is one. Keyed on the raw
+            location, opening the overlay would remount the page behind it — losing its
+            scroll position and replaying every reveal animation.
+
+            fallback={null} rather than a spinner: the chunks are small and same-origin,
+            so anything visible here would only ever flash. */}
+        <Suspense key={(background ?? location).pathname} fallback={null}>
+          {/* Adding a route here is only half the job: wrangler.jsonc now serves a real
+              404 for any path with no prerendered file, so a new route also needs an
+              entry in scripts/prerender.mjs or it will only work via in-app navigation
+              and 404 on a direct visit. The two :slug routes are already covered — that
+              script emits one file per entry in each data/ collection. */}
+          <Routes location={background ?? location}>
+            <Route path="/" element={<Home />} />
+            <Route path="/projects" element={<ProjectsIndex />} />
+            <Route path="/projects/:slug" element={<ProjectDetail />} />
+            <Route path="/certificates" element={<CertificatesIndex />} />
+            <Route path="/certificates/:slug" element={<CertificateDetail />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
+      </AnimatePresence>
+
+      {/* Overlay layer. AnimatePresence here lets the panel animate out before the
+          <dialog> is removed from the DOM, which is what closes it. */}
+      <AnimatePresence>
+        {background && (
+          <Suspense key="detail-overlay" fallback={null}>
+            <Routes location={location}>
+              <Route path="/projects/:slug" element={<ProjectModal />} />
+              <Route path="/certificates/:slug" element={<CertificateModal />} />
+            </Routes>
+          </Suspense>
+        )}
+      </AnimatePresence>
+    </>
   )
 }
