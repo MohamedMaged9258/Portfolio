@@ -1,8 +1,8 @@
 ---
 title: "Yantiq"
 slug: "yantiq"
-summary: "An AI-powered early Arabic reading tutor for children that combines structured literacy lessons with real-time pronunciation feedback, adaptive support, and guardian-assisted progress tracking."
-stack: ["Flutter", "FastAPI", "MySQL", "Whisper", "Arabic Speech AI"]
+summary: "An AI-powered Arabic reading tutor for children: structured literacy lessons with real-time pronunciation feedback from a fine-tuned Arabic speech model."
+stack: ["React Native", "FastAPI", "MySQL", "Whisper", "Arabic Speech AI"]
 date: "2026-08"
 layout: "case-study"
 featured: true
@@ -20,17 +20,19 @@ Yantiq was designed to address these gaps with an intelligent, interactive, and 
 
 ## What I built
 
-Yantiq is a mobile-first Arabic learning platform that combines structured literacy lessons, audio-first activities, gamification, and AI-powered pronunciation evaluation.
+Yantiq is a **React Native** app backed by a **FastAPI** service, combining structured literacy lessons, audio-first activities, gamification, and AI-powered pronunciation evaluation.
 
 The MVP is organized around **five learning levels with multiple stages**, using short lessons that guide children from letters to words and eventually simple sentences. Lessons combine visual recognition with listening and speaking activities so children can hear a target, repeat it, and receive immediate feedback.
 
-A core part of the system is a **fine-tuned Arabic speech model** adapted from an existing Quranic speech/recitation model to Modern Standard Arabic. During a speaking activity, the system:
+The centrepiece is the speech model, and it is the part still in flight: **we are fine-tuning Whisper on Modern Standard Arabic**, starting from a checkpoint already trained on Quranic recitation rather than from the base model. The acoustics are close enough that it saves a great deal of labelled data — but recitation is not how a five-year-old speaks, and closing that gap is what the fine-tune is for.
+
+During a speaking activity, the system:
 
 1. Presents a target letter, word, or sentence.
 2. Stores the expected answer as predefined ground truth.
 3. Records the child’s spoken response.
 4. Sends the audio to a separate AI service layer.
-5. Transcribes the speech using the fine-tuned model.
+5. Transcribes the speech with the fine-tuned Whisper model.
 6. Compares the transcription with the expected ground truth.
 7. Generates a correctness result, score, and feedback indicators.
 8. Returns guided, encouraging feedback to the child.
@@ -44,10 +46,10 @@ To keep the experience engaging, the MVP includes **stars, badges, and level unl
 
 Yantiq uses a modular architecture with four main components:
 
-- **Mobile application layer** — handles child-facing lessons, audio playback, speaking interactions, rewards, onboarding, and progress views.
-- **Main backend server** — manages guardian accounts, child profiles, lesson progression, scoring, rewards, and communication with the AI service.
-- **AI service layer** — handles audio preprocessing, speech inference, transcription, ground-truth comparison, pronunciation evaluation, scoring, and feedback generation.
-- **Relational database** — stores guardian accounts, child profiles, lesson structures, performance results, rewards, and progress history.
+- **React Native app** — child-facing lessons, audio capture and playback, speaking interactions, rewards, onboarding, and progress views.
+- **FastAPI backend** — guardian accounts, child profiles, lesson progression, scoring, rewards, and communication with the AI service.
+- **AI service layer** — audio preprocessing, Whisper inference, transcription, ground-truth comparison, pronunciation evaluation, scoring, and feedback generation. Kept as its own service so model inference can scale — and be retrained — without touching the app.
+- **MySQL database** — guardian accounts, child profiles, lesson structures, performance results, rewards, and progress history.
 
 Security is applied across the system through guardian authentication, authorization, secure communication between services, input validation, child-data protection, and basic abuse prevention.
 
@@ -68,4 +70,4 @@ The project defines measurable targets for the MVP, including:
 - At least **80% of child test sessions** completed without external help.
 - Typical lesson completion time of **2–5 minutes**.
 
-The overall goal is to deliver a complete, testable core product that demonstrates strong value in **Arabic literacy, speech AI, mobile learning, backend integration, progress tracking, and child-safe system design** without overloading the first release with high-risk advanced features.
+The overall goal is to deliver a complete, testable core product that demonstrates strong value in **Arabic literacy, speech AI, React Native app development, FastAPI backend integration, progress tracking, and child-safe system design** without overloading the first release with high-risk advanced features.
