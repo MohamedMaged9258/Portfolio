@@ -41,9 +41,7 @@ export default function Wordmark({ className }: { className?: string }) {
       </span>
       {/* Hidden below sm, but kept in the accessibility tree — as `hidden sm:inline`
           the link's entire accessible name on a phone was the letter "M". */}
-      <span className="sr-only sm:not-sr-only">
-        mohamed<span className="text-accent">.</span>maged
-      </span>
+      <span className="sr-only sm:not-sr-only">Mohamed Maged</span>
     </Link>
   )
 }

@@ -1,0 +1,71 @@
+---
+title: "Yantiq"
+slug: "yantiq"
+summary: "An AI-powered early Arabic reading tutor for children that combines structured literacy lessons with real-time pronunciation feedback, adaptive support, and guardian-assisted progress tracking."
+stack: ["Flutter", "FastAPI", "MySQL", "Whisper", "Arabic Speech AI"]
+date: "2026-08"
+layout: "case-study"
+featured: true
+---
+
+## The problem
+
+Early Arabic literacy can be difficult for preschool-aged children, especially those growing up in non-Arabic-speaking environments. Many learners do not get enough consistent exposure to correct Arabic pronunciation, and existing learning tools often rely on static content without meaningful real-time speaking feedback.
+
+Most available solutions also lack a structured progression from **letter recognition → words → sentences**, making it harder to build reading skills step by step. Listening, speaking, and reading are often treated as separate activities instead of one connected learning experience.
+
+Parents and teachers also have limited visibility into a child’s progress when platforms do not provide useful tracking, scoring, or adaptive support.
+
+Yantiq was designed to address these gaps with an intelligent, interactive, and child-friendly Arabic learning experience focused on early reading and pronunciation.
+
+## What I built
+
+Yantiq is a mobile-first Arabic learning platform that combines structured literacy lessons, audio-first activities, gamification, and AI-powered pronunciation evaluation.
+
+The MVP is organized around **five learning levels with multiple stages**, using short lessons that guide children from letters to words and eventually simple sentences. Lessons combine visual recognition with listening and speaking activities so children can hear a target, repeat it, and receive immediate feedback.
+
+A core part of the system is a **fine-tuned Arabic speech model** adapted from an existing Quranic speech/recitation model to Modern Standard Arabic. During a speaking activity, the system:
+
+1. Presents a target letter, word, or sentence.
+2. Stores the expected answer as predefined ground truth.
+3. Records the child’s spoken response.
+4. Sends the audio to a separate AI service layer.
+5. Transcribes the speech using the fine-tuned model.
+6. Compares the transcription with the expected ground truth.
+7. Generates a correctness result, score, and feedback indicators.
+8. Returns guided, encouraging feedback to the child.
+9. Stores the score for progress tracking.
+
+The learning flow uses a **fixed path with light adaptation**. Children must meet pass criteria before unlocking the next stage. When they struggle, the system first provides hints and retry opportunities; repeated difficulty can trigger a simpler version of the task.
+
+To keep the experience engaging, the MVP includes **stars, badges, and level unlocking**. More advanced features such as daily streaks, avatars, dynamic AI personalization, an AI voice companion, and a full parent/teacher dashboard are intentionally deferred to later phases.
+
+### System architecture
+
+Yantiq uses a modular architecture with four main components:
+
+- **Mobile application layer** — handles child-facing lessons, audio playback, speaking interactions, rewards, onboarding, and progress views.
+- **Main backend server** — manages guardian accounts, child profiles, lesson progression, scoring, rewards, and communication with the AI service.
+- **AI service layer** — handles audio preprocessing, speech inference, transcription, ground-truth comparison, pronunciation evaluation, scoring, and feedback generation.
+- **Relational database** — stores guardian accounts, child profiles, lesson structures, performance results, rewards, and progress history.
+
+Security is applied across the system through guardian authentication, authorization, secure communication between services, input validation, child-data protection, and basic abuse prevention.
+
+### Target users
+
+The primary users are **children learning early Arabic literacy**, while **parents and teachers** act as secondary users who support onboarding and monitor progress.
+
+### Success criteria
+
+The project defines measurable targets for the MVP, including:
+
+- Speech evaluation results returned for at least **90% of attempts**.
+- At least **80% transcription accuracy** on test cases.
+- At least **90% correct ground-truth comparison** on valid test cases.
+- At least **80% correct pronunciation classification**.
+- Average AI feedback latency of **2 seconds or less**.
+- Backend API success rate of at least **95%**.
+- At least **80% of child test sessions** completed without external help.
+- Typical lesson completion time of **2–5 minutes**.
+
+The overall goal is to deliver a complete, testable core product that demonstrates strong value in **Arabic literacy, speech AI, mobile learning, backend integration, progress tracking, and child-safe system design** without overloading the first release with high-risk advanced features.

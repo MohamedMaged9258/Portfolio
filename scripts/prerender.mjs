@@ -177,6 +177,7 @@ const websiteNode = {
   '@id': WEBSITE_ID,
   url: `${SITE}/`,
   name: profile.name,
+  alternateName: 'Mohamed Maged Portfolio',
   description: profile.seoDescription,
   inLanguage: 'en',
   publisher: { '@id': PERSON_ID },

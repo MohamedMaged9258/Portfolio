@@ -2,7 +2,7 @@
 title: "Home Lab Infrastructure & Server Management"
 slug: "homelab"
 summary: "A self-hosted virtualization lab on Proxmox VE running VMs, Linux containers, and dockerized apps — a production-like playground for networking, security, and deployment."
-stack: ["Proxmox VE", "Ubuntu Server", "Docker", "Bash", "WireGuard"]
+stack: ["Proxmox VE", "Ubuntu Server", "Docker", "Bash", "Tailscale"]
 date: "2025-06"
 layout: "log"
 featured: true
@@ -41,7 +41,7 @@ I wanted to reach the lab from anywhere without exposing it directly to the publ
 
 ### What I did
 
-- Stood up a **WireGuard VPN** so remote access rides an encrypted tunnel.
+- Stood up **Tailscale** so remote access rides an encrypted tunnel.
 - Hardened **SSH** with key-based auth and sensible defaults, and tightened general system security.
 
 The result: I can manage everything remotely while keeping the attack surface small.
@@ -56,4 +56,4 @@ With the foundation in place, the lab earns its keep by **hosting my personal pr
 - A hands-on feel for networking, DNS, and VPNs, not just the theory.
 - The habit of thinking about deployment and security from the start, rather than as an afterthought.
 
-**Tools:** Proxmox VE · Ubuntu Server · Docker · Bash · WireGuard · SSH
+**Tools:** Proxmox VE · Ubuntu Server · Docker · Bash · Tailscale · SSH
