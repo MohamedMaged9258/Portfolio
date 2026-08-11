@@ -141,6 +141,18 @@ To get the large banner card, add a landscape image:
 `prerender.mjs` reads the dimensions out of the PNG header at build time, so
 `og:image:width` / `:height` and the card type update themselves. Nothing to remember.
 
+### 7. Optional accelerators
+
+Only worth doing once the above is done:
+
+- Write up a project on **dev.to** or **Hashnode** and link back here. The home lab post
+  is the most naturally interesting one to a technical audience.
+- Answer questions on **Stack Overflow** with the site in your profile.
+- Ask whether **Alamein International University** lists student or project pages you
+  could appear on. A `.edu`-equivalent inbound link is worth many ordinary ones.
+- If you present anywhere or complete a notable course, get the certificate page up —
+  see the content gap below.
+
 ---
 
 ## Getting the portrait into search results
@@ -175,17 +187,46 @@ the directive never reached the crawler on any route. If you change one, change 
 check the rendered DOM in DevTools' Elements panel — not view-source, which shows the
 prerendered HTML and would look fine either way.
 
-### 7. Optional accelerators
+---
 
-Only worth doing once the above is done:
+## Why the site name said "DigitalPlat Domain"
 
-- Write up a project on **dev.to** or **Hashnode** and link back here. The home lab post
-  is the most naturally interesting one to a technical audience.
-- Answer questions on **Stack Overflow** with the site in your profile.
-- Ask whether **Alamein International University** lists student or project pages you
-  could appear on. A `.edu`-equivalent inbound link is worth many ordinary ones.
-- If you present anywhere or complete a notable course, get the certificate page up —
-  see the content gap below.
+The bold line above the URL in a result is Google's
+[site name](https://developers.google.com/search/docs/appearance/site-names). It is
+computed from the **home page only**, from five signals in priority order:
+
+1. `WebSite` structured data (`name`)
+2. `og:site_name`
+3. `<title>`
+4. Heading elements
+5. Other home page text
+
+**All five already say "Mohamed Maged"** — `websiteNode` in `scripts/prerender.mjs`,
+`og:site_name` in `index.html`, the prerendered `<title>`, the `<h1>` in `Hero.tsx`, and
+the wordmark in `Wordmark.tsx`. If the SERP still shows something else, the answer is a
+recrawl and patience, **not** more markup. Adding signals that already agree changes
+nothing.
+
+It read "DigitalPlat Domain" because the structured data postdated Google's first crawl.
+`WebSite` and `og:site_name` first shipped on 2026-08-10; before that the site was a
+client-rendered SPA serving an empty `<div id="root">` with no JSON-LD at all. Google's
+documented fallback for a subdomain with no `WebSite` node of its own is the
+**domain-level** name — so it took DigitalPlat's and cached it.
+
+`alternateName` is a preference-ordered ladder used only if Google declines `name`. The
+bare host (`HOST`, derived from `SITE`) is the last rung deliberately: Google names the
+lowercase domain as the last-resort option, and your own URL beats the domain provider's
+brand.
+
+To fix it after any change here: **Search Console → URL Inspection → the home page →
+Request Indexing**. That one URL is the only one that matters for the site name. Then
+wait — Google's own troubleshooting step is "allow time", and this commonly lags the
+recrawl by weeks. There is no preview tool; the Rich Results Test does not show site
+names, so the live SERP is the only verification.
+
+If it is still wrong a month after a confirmed recrawl, the remaining lever is not markup.
+A free subdomain always has a provider name to fall back to — see the appendix on moving
+to a real domain.
 
 ---
 

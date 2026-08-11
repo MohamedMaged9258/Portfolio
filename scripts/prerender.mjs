@@ -31,6 +31,9 @@ const profile = JSON.parse(readFileSync(join(dataDir, 'profile.json'), 'utf8'))
 const SITE = profile.site.replace(/\/$/, '')
 const DEFAULT_IMAGE = '/Profile.png'
 
+/** Bare hostname, lowercase. Used as the last rung of the site-name fallback ladder. */
+const HOST = SITE.replace(/^https?:\/\//, '').toLowerCase()
+
 /** Stable node ids, so every page's JSON-LD resolves to one Person rather than several. */
 const PERSON_ID = `${SITE}/#person`
 const WEBSITE_ID = `${SITE}/#website`
@@ -202,12 +205,23 @@ function personNode(extra = {}) {
  */
 const identityNodes = (extra) => [personNode(extra), portraitNode]
 
+/**
+ * `name` is what Google renders as the site name above the URL in a result, computed from
+ * the home page alone. It has to be here: a subdomain with no WebSite node of its own
+ * falls back to the *domain-level* name, which for a dpdns.org host means DigitalPlat's
+ * branding rather than yours.
+ *
+ * alternateName is a preference-ordered ladder, most-preferred first, used only if Google
+ * declines `name`. The bare host is the last rung on purpose — Google documents the
+ * lowercase domain as the last-resort option, and seeing your own URL there beats seeing
+ * the domain provider's brand.
+ */
 const websiteNode = {
   '@type': 'WebSite',
   '@id': WEBSITE_ID,
   url: `${SITE}/`,
   name: profile.name,
-  alternateName: 'Mohamed Maged Portfolio',
+  alternateName: [`${profile.name} Portfolio`, HOST],
   description: profile.seoDescription,
   inLanguage: 'en',
   publisher: { '@id': PERSON_ID },
