@@ -34,6 +34,7 @@ const DEFAULT_IMAGE = '/Profile.png'
 /** Stable node ids, so every page's JSON-LD resolves to one Person rather than several. */
 const PERSON_ID = `${SITE}/#person`
 const WEBSITE_ID = `${SITE}/#website`
+const PORTRAIT_ID = `${SITE}/#portrait`
 
 const abs = (path) => `${SITE}${path}`
 
@@ -136,6 +137,26 @@ const ogSize = existsSync(ogImageFile) ? pngSize(ogImageFile) : undefined
  */
 const twitterCard = ogSize && ogSize.width / ogSize.height >= 1.5 ? 'summary_large_image' : 'summary'
 
+/**
+ * The portrait as a first-class node rather than a bare URL string.
+ *
+ * `primaryImageOfPage` and `Person.image` both declare ImageObject as their expected
+ * type; a string satisfies neither cleanly, so validators warn and Google is free to
+ * ignore the property. Dimensions come from the same pngSize() read as the og:image tags,
+ * so they cannot drift from the file actually shipped.
+ *
+ * This always describes Profile.png specifically — a certificate page overriding its
+ * og:image does not change who the Person is a picture of.
+ */
+const portraitNode = {
+  '@type': 'ImageObject',
+  '@id': PORTRAIT_ID,
+  url: abs(DEFAULT_IMAGE),
+  contentUrl: abs(DEFAULT_IMAGE),
+  caption: `${profile.name} — ${profile.title}`,
+  ...(ogSize ? { width: ogSize.width, height: ogSize.height } : {}),
+}
+
 /* -------------------------------------------------------------------------- */
 /* JSON-LD                                                                     */
 /* -------------------------------------------------------------------------- */
@@ -155,7 +176,7 @@ function personNode(extra = {}) {
     '@id': PERSON_ID,
     name: profile.name,
     url: `${SITE}/`,
-    image: abs(DEFAULT_IMAGE),
+    image: { '@id': PORTRAIT_ID },
     jobTitle: profile.title,
     description: profile.summary,
     email: `mailto:${profile.email}`,
@@ -171,6 +192,15 @@ function personNode(extra = {}) {
     ...extra,
   }
 }
+
+/**
+ * Person plus the portrait it points at, for splatting into a page's @graph.
+ *
+ * Person.image is an @id reference, and by the same logic as the comment above, that
+ * reference resolves to nothing on a page that doesn't also carry the ImageObject. Pairing
+ * them in one helper is what stops a route added later from shipping a dangling @id.
+ */
+const identityNodes = (extra) => [personNode(extra), portraitNode]
 
 const websiteNode = {
   '@type': 'WebSite',
@@ -366,7 +396,7 @@ const pages = [
     // "profile" tells Open Graph this page *is* a person, not a generic site.
     ogType: 'profile',
     graph: [
-      personNode(),
+      ...identityNodes(),
       websiteNode,
       {
         '@type': 'ProfilePage',
@@ -375,6 +405,7 @@ const pages = [
         name: `${profile.name} — ${profile.title}`,
         description: profile.seoDescription,
         isPartOf: { '@id': WEBSITE_ID },
+        primaryImageOfPage: { '@id': PORTRAIT_ID },
         about: { '@id': PERSON_ID },
         mainEntity: { '@id': PERSON_ID },
         inLanguage: 'en',
@@ -387,7 +418,7 @@ const pages = [
     title: `Projects — ${profile.name}`,
     description: `Case studies and build logs from ${profile.name} — ${profile.title}.`,
     graph: [
-      personNode(),
+      ...identityNodes(),
       websiteNode,
       {
         '@type': 'CollectionPage',
@@ -413,7 +444,7 @@ const pages = [
     // Lifts itself automatically as soon as one certificate exists.
     noindex: certificates.length === 0,
     graph: [
-      personNode(),
+      ...identityNodes(),
       websiteNode,
       {
         '@type': 'CollectionPage',
@@ -440,7 +471,11 @@ const pages = [
       description: p.summary,
       ogType: 'article',
       graph: [
-        personNode(),
+        ...identityNodes(),
+        // Carried because the project node below declares isPartOf against it. Without the
+        // node on this page the reference dangles — same reason identityNodes pairs the
+        // portrait with the Person.
+        websiteNode,
         {
           // SoftwareSourceCode only when there is a repository to point at; the home lab
           // write-up is infrastructure, not source, and CreativeWork describes it honestly.
@@ -482,7 +517,7 @@ const pages = [
       graph: [
         // hasCredential is the only property that ties a credential back to its holder;
         // the credential node itself has no "awarded to" field.
-        personNode({ hasCredential: { '@id': credentialId } }),
+        ...identityNodes({ hasCredential: { '@id': credentialId } }),
         {
           '@type': 'EducationalOccupationalCredential',
           '@id': credentialId,
@@ -539,7 +574,16 @@ const newest = (entries) =>
   entries.map((e) => e.date).filter(Boolean).sort().pop()
 
 const urls = [
-  { loc: '/', lastmod: fullDate(newest([...projects, ...certificates])), priority: '1.0' },
+  // The portrait is listed here so Googlebot-Image has a direct path to it. Otherwise the
+  // only route to the file is rendering the homepage and noticing the <img>, which is a
+  // slower and less reliable way to get a photo into the index — and being in the image
+  // index is the precondition for it ever appearing beside a search result.
+  {
+    loc: '/',
+    lastmod: fullDate(newest([...projects, ...certificates])),
+    priority: '1.0',
+    image: { loc: DEFAULT_IMAGE, title: `${profile.name} — ${profile.title}` },
+  },
   { loc: '/projects', lastmod: fullDate(newest(projects)), priority: '0.8' },
   ...projects.map((p) => ({ loc: projectUrl(p.slug), lastmod: fullDate(p.date), priority: '0.7' })),
   // Skipped while the collection is empty: a listing with nothing on it is a thin page,
@@ -558,13 +602,24 @@ writeFileSync(
   join(dist, 'sitemap.xml'),
   [
     '<?xml version="1.0" encoding="UTF-8"?>',
-    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
-    ...urls.map(({ loc, lastmod, priority }) =>
+    // The image namespace is Google's extension, ignored by anything that doesn't know it.
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"',
+    '        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">',
+    ...urls.map(({ loc, lastmod, priority, image }) =>
       [
         '  <url>',
         `    <loc>${abs(loc)}</loc>`,
         ...(lastmod ? [`    <lastmod>${lastmod}</lastmod>`] : []),
         `    <priority>${priority}</priority>`,
+        // escapeAttr covers &, < and > — the three that would make this malformed XML.
+        ...(image
+          ? [
+              '    <image:image>',
+              `      <image:loc>${abs(image.loc)}</image:loc>`,
+              `      <image:title>${escapeAttr(image.title)}</image:title>`,
+              '    </image:image>',
+            ]
+          : []),
         '  </url>',
       ].join('\n'),
     ),

@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { SITE, DEFAULT_IMAGE } from './site'
+import { SITE, DEFAULT_IMAGE, ROBOTS_INDEX } from './site'
 
 export interface DocumentMeta {
   title: string
@@ -55,7 +55,7 @@ export function useDocumentMeta({ title, description, path, image, noindex }: Do
     setMeta('name', 'description', description)
     // Written on every route, not just the 404 — adding it conditionally would strand
     // a stale noindex on whatever page you navigated to next.
-    setMeta('name', 'robots', noindex ? 'noindex, follow' : 'index, follow')
+    setMeta('name', 'robots', noindex ? 'noindex, follow' : ROBOTS_INDEX)
 
     setMeta('property', 'og:title', title)
     setMeta('property', 'og:description', description)

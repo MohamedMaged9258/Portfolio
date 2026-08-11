@@ -17,7 +17,10 @@
       content="Mohamed Maged — AIOps Engineer and AI Engineering student in Egypt. Flutter apps, MLOps, Oracle ERP, Docker and Linux. Projects, CV and contact."
     />
     <meta name="author" content="Mohamed Maged" />
-    <meta name="robots" content="index, follow" />
+    <!-- Mirrors ROBOTS_INDEX in src/lib/site.ts, which useDocumentMeta rewrites this tag
+         with on mount. Googlebot indexes the rendered DOM, so the two must match exactly
+         or the hook's value is the one that counts. -->
+    <meta name="robots" content="index, follow, max-image-preview:large" />
     <meta name="theme-color" content="#0a0e14" />
     <link rel="canonical" href="https://mohamedm.dpdns.org/" />
 

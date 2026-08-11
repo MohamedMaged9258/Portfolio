@@ -101,10 +101,18 @@ export default function Hero() {
               {/* ambient accent glow */}
               <div className="absolute -inset-4 -z-10 rounded-full bg-accent/10 blur-3xl" aria-hidden />
               <div className="relative overflow-hidden rounded-2xl border border-line">
+                {/* alt carries the job title, not the word "portrait": it is the label
+                    Google Images matches against, and the query worth winning is the name
+                    plus a qualifier. Intrinsic dimensions and fetchPriority mark this as
+                    the page's principal image rather than decoration — aspect-[3/4] still
+                    drives the rendered size, so layout is unchanged. */}
                 <img
                   src="/Profile.png"
-                  alt={`${profile.name} — portrait`}
+                  alt={`${profile.name}, ${profile.title}`}
+                  width={848}
+                  height={1264}
                   loading="eager"
+                  fetchPriority="high"
                   className="aspect-[3/4] w-full object-cover object-center"
                 />
                 {/* fade the photo into the page background */}
