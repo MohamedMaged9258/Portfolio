@@ -75,6 +75,25 @@ function readFrontmatter(file) {
   }
 
   /**
+   * An ISO 8601 datetime carrying a timezone, e.g. 2026-06-16T18:17:53Z.
+   *
+   * Google's Discussion Forum validator rejects a date-only datePublished, and it does so
+   * on its own schedule — the page ships clean, and the warning surfaces in Search Console
+   * days later. Failing the build is the cheaper feedback loop, same reasoning as scalar()
+   * throwing rather than shipping blank.
+   */
+  const isoDateTime = (key) => {
+    const v = optional(key)
+    if (v === undefined) return undefined
+    if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})$/.test(v)) {
+      throw new Error(
+        `"${key}" in ${file} must be an ISO 8601 datetime with a timezone, got "${v}"`,
+      )
+    }
+    return v
+  }
+
+  /**
    * A YAML literal block scalar — key: | followed by indented lines.
    *
    * For prose that can't sit on one line: every other helper here matches "(.*)"
@@ -114,7 +133,7 @@ function readFrontmatter(file) {
     repo: nested('links', 'github'),
     live: nested('links', 'live'),
     linkedin: nested('links', 'linkedin'),
-    linkedinDate: optional('linkedinDate'),
+    linkedinDate: isoDateTime('linkedinDate'),
     linkedinText: literal('linkedinText'),
   }
 }

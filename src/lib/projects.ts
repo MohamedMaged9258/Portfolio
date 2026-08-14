@@ -24,6 +24,10 @@ export interface ProjectFrontmatter {
    * SocialMediaPosting — nothing renders them. Declared here anyway so this interface
    * stays an honest description of what a project file may contain. All three fields
    * travel together: any one missing and the JSON-LD node is omitted entirely.
+   *
+   * linkedinDate must be a full ISO 8601 datetime *with a timezone*
+   * ("2026-06-16T18:17:53Z"). A bare date fails the build — Google's validator rejects
+   * it, and it is better to hear that from npm than from Search Console a week later.
    */
   linkedinDate?: string
   linkedinText?: string

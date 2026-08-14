@@ -115,7 +115,7 @@ the card will then just show its Verify button.
 | `links.github` | no | Adds a "Source" link on the detail page |
 | `links.live` | no | Adds a "Live" link on the detail page |
 | `links.linkedin` | no | Adds a "LinkedIn" link on the detail page, pointing at a post about the project |
-| `linkedinDate` | no | The LinkedIn post's publication date, `"YYYY-MM-DD"`. **Structured data only — never rendered** |
+| `linkedinDate` | no | The LinkedIn post's publication time as an ISO 8601 datetime **with a timezone**, e.g. `"2026-06-16T18:17:53Z"`. A bare date fails the build. **Structured data only — never rendered** |
 | `linkedinText` | no | The LinkedIn post's body. **Structured data only — never rendered** |
 | `featured` | no | `true` puts it on the home page. `/projects` always lists everything |
 
@@ -129,6 +129,30 @@ which requires an author, a publication date, and the post's text. A partial one
 ignored; it's reported as a **critical error against the whole page** in Search Console.
 So the build emits the JSON-LD only when all three are present, and nothing at all
 otherwise. Add `linkedinDate` and `linkedinText` together or leave both out.
+
+**You don't have to guess `linkedinDate`** — the post URL already contains it. A LinkedIn
+activity ID is a snowflake whose top 41 bits are a Unix millisecond timestamp, so shifting
+it right by 22 recovers the exact publication instant:
+
+```bash
+node -e 'console.log(new Date(Number(7472714080458403840n >> 22n)).toISOString())'
+# 2026-06-16T18:17:53.095Z  →  use "2026-06-16T18:17:53Z"
+```
+
+Take the ID from the `activity-<id>-` segment of the URL. The result is UTC, which is why
+it ends in `Z` — that's the real instant, not an assumption about your local clock.
+
+Nobody reads that string, so write yourself a note above it:
+
+```yaml
+# Posted Tuesday 16 June 2026, 18:17 UTC — 21:17 in Cairo.
+linkedinDate: "2026-06-16T18:17:53Z"
+```
+
+**Put comments on their own line, never after the value.** The frontmatter reader in
+`scripts/prerender.mjs` expects the closing quote to end the line, so a trailing `# note`
+makes it skip the field — and because the three LinkedIn fields are all-or-nothing, the
+whole JSON-LD node would quietly disappear rather than error.
 
 `linkedinText` is the one field that uses YAML's `|` block form, because a post body
 carries its own quotes and line breaks and won't survive a single quoted line. Indent
