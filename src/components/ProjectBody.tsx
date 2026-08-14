@@ -1,6 +1,6 @@
 import { MDXProvider } from '@mdx-js/react'
 import { ExternalLink } from 'lucide-react'
-import { FaGithub } from 'react-icons/fa6'
+import { FaGithub, FaLinkedinIn } from 'react-icons/fa6'
 import { mdxComponents } from './mdxComponents'
 import type { Project } from '../lib/projects'
 import { cn } from '../lib/cn'
@@ -42,7 +42,7 @@ export default function ProjectBody({
         ))}
       </div>
 
-      {links && (links.github || links.live) && (
+      {links && (links.github || links.live || links.linkedin) && (
         <div className="mt-5 flex flex-wrap items-center gap-4">
           {links.github && (
             <a
@@ -64,6 +64,20 @@ export default function ProjectBody({
             >
               <ExternalLink className="h-4 w-4" />
               Live
+            </a>
+          )}
+          {links.linkedin && (
+            <a
+              href={links.linkedin}
+              target="_blank"
+              // Plain noreferrer, not the rel="me" Socials.tsx uses: "me" claims the target
+              // is another profile of the same person, and a post *about* the project isn't
+              // an identity claim. The subjectOf node in prerender.mjs states the real relation.
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 text-sm text-slate-300 transition hover:text-accent"
+            >
+              <FaLinkedinIn className="h-4 w-4" />
+              LinkedIn
             </a>
           )}
         </div>

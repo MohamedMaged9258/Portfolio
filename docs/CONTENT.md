@@ -66,6 +66,7 @@ layout: "case-study"
 links:
   github: "https://github.com/you/repo"
   live: "https://example.com"
+  linkedin: "https://www.linkedin.com/posts/you_slug-activity-123456789/"
 featured: true
 ---
 
@@ -113,6 +114,7 @@ the card will then just show its Verify button.
 | `layout` | **yes** | `"log"` or `"case-study"` — see below |
 | `links.github` | no | Adds a "Source" link on the detail page |
 | `links.live` | no | Adds a "Live" link on the detail page |
+| `links.linkedin` | no | Adds a "LinkedIn" link on the detail page, pointing at a post about the project |
 | `featured` | no | `true` puts it on the home page. `/projects` always lists everything |
 
 ### `layout` does less than it sounds like

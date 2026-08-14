@@ -93,6 +93,7 @@ function readFrontmatter(file) {
     skills: list('skills'),
     repo: nested('links', 'github'),
     live: nested('links', 'live'),
+    linkedin: nested('links', 'linkedin'),
   }
 }
 
@@ -504,6 +505,12 @@ const pages = [
           isPartOf: { '@id': WEBSITE_ID },
           ...(p.date ? { datePublished: p.date } : {}),
           ...(p.repo ? { codeRepository: p.repo } : {}),
+          // subjectOf, not sameAs: sameAs would assert the post *is* this project under
+          // another URL. A write-up about the work is a separate CreativeWork that happens
+          // to be about it, which is exactly what subjectOf means.
+          ...(p.linkedin
+            ? { subjectOf: { '@type': 'SocialMediaPosting', url: p.linkedin } }
+            : {}),
           ...(p.stack.length ? { keywords: p.stack.join(', ') } : {}),
           // programmingLanguage is only defined on SoftwareSourceCode — putting it on a
           // CreativeWork would be an invalid property rather than a merely unused one.

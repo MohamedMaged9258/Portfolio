@@ -5,6 +5,7 @@ export type ProjectLayout = 'log' | 'case-study'
 export interface ProjectLinks {
   github?: string
   live?: string
+  linkedin?: string
 }
 
 export interface ProjectFrontmatter {
