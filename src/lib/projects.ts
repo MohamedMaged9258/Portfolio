@@ -17,6 +17,16 @@ export interface ProjectFrontmatter {
   layout: ProjectLayout
   links?: ProjectLinks
   featured?: boolean
+  /**
+   * Publication date and body of the LinkedIn post named by links.linkedin.
+   *
+   * Read only by scripts/prerender.mjs, which needs them to emit a valid
+   * SocialMediaPosting — nothing renders them. Declared here anyway so this interface
+   * stays an honest description of what a project file may contain. All three fields
+   * travel together: any one missing and the JSON-LD node is omitted entirely.
+   */
+  linkedinDate?: string
+  linkedinText?: string
 }
 
 export interface Project extends ProjectFrontmatter {

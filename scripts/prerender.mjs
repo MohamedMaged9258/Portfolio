@@ -74,6 +74,26 @@ function readFrontmatter(file) {
     return [...m[1].matchAll(/"([^"]*)"/g)].map((x) => x[1])
   }
 
+  /**
+   * A YAML literal block scalar — key: | followed by indented lines.
+   *
+   * For prose that can't sit on one line: every other helper here matches "(.*)"
+   * greedily on a single line, which a multi-paragraph body full of its own quotes
+   * would tear apart. Named literal rather than block because block is already the
+   * frontmatter match above.
+   */
+  const literal = (key) => {
+    // The inner group makes the indent optional so blank lines stay inside the block —
+    // a paragraph break carries no leading whitespace, and requiring it would end the
+    // match at the first one and silently truncate a multi-paragraph body. An unindented
+    // key still terminates it: there is no newline to consume at that position.
+    const m = new RegExp(`^${key}:\\s*\\|\\s*\\n((?:(?:[ \\t]+.*)?(?:\\n|$))*)`, 'm').exec(yaml)
+    if (!m) return undefined
+    const lines = m[1].replace(/\s+$/, '').split('\n')
+    const indent = /^[ \t]*/.exec(lines[0])[0].length
+    return lines.map((l) => l.slice(indent)).join('\n')
+  }
+
   /** One level of nesting, e.g. the indented github: under links:. */
   const nested = (parent, key) => {
     const m = new RegExp(`^${parent}:\\s*\\n(?:[ \\t]+.*\\n?)*`, 'm').exec(yaml)
@@ -94,6 +114,8 @@ function readFrontmatter(file) {
     repo: nested('links', 'github'),
     live: nested('links', 'live'),
     linkedin: nested('links', 'linkedin'),
+    linkedinDate: optional('linkedinDate'),
+    linkedinText: literal('linkedinText'),
   }
 }
 
@@ -508,8 +530,24 @@ const pages = [
           // subjectOf, not sameAs: sameAs would assert the post *is* this project under
           // another URL. A write-up about the work is a separate CreativeWork that happens
           // to be about it, which is exactly what subjectOf means.
-          ...(p.linkedin
-            ? { subjectOf: { '@type': 'SocialMediaPosting', url: p.linkedin } }
+          //
+          // Every required field or no node at all. SocialMediaPosting is one of the two
+          // types that activate Google's Discussion Forum rich result, so it is validated
+          // against that feature's requirements — author, datePublished, and a content
+          // element — and a partial one is reported as a critical error against the whole
+          // page rather than quietly ignored. That is how this node first shipped broken.
+          ...(p.linkedin && p.linkedinDate && p.linkedinText
+            ? {
+                subjectOf: {
+                  '@type': 'SocialMediaPosting',
+                  url: p.linkedin,
+                  // name alongside the @id: Google wants author.name as text, and though
+                  // it does resolve @id within a @graph, the literal costs nothing.
+                  author: { '@id': PERSON_ID, name: profile.name },
+                  datePublished: p.linkedinDate,
+                  text: p.linkedinText,
+                },
+              }
             : {}),
           ...(p.stack.length ? { keywords: p.stack.join(', ') } : {}),
           // programmingLanguage is only defined on SoftwareSourceCode — putting it on a

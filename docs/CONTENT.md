@@ -115,7 +115,31 @@ the card will then just show its Verify button.
 | `links.github` | no | Adds a "Source" link on the detail page |
 | `links.live` | no | Adds a "Live" link on the detail page |
 | `links.linkedin` | no | Adds a "LinkedIn" link on the detail page, pointing at a post about the project |
+| `linkedinDate` | no | The LinkedIn post's publication date, `"YYYY-MM-DD"`. **Structured data only — never rendered** |
+| `linkedinText` | no | The LinkedIn post's body. **Structured data only — never rendered** |
 | `featured` | no | `true` puts it on the home page. `/projects` always lists everything |
+
+### The three LinkedIn fields are all-or-nothing
+
+`links.linkedin` on its own is enough for the **visible button** — that part always works.
+
+The three together are what let the page describe the post in its structured data, and
+there Google validates `SocialMediaPosting` against its Discussion Forum rich result,
+which requires an author, a publication date, and the post's text. A partial one isn't
+ignored; it's reported as a **critical error against the whole page** in Search Console.
+So the build emits the JSON-LD only when all three are present, and nothing at all
+otherwise. Add `linkedinDate` and `linkedinText` together or leave both out.
+
+`linkedinText` is the one field that uses YAML's `|` block form, because a post body
+carries its own quotes and line breaks and won't survive a single quoted line. Indent
+every line under the pipe by the same amount — the indentation is stripped back off:
+
+```yaml
+linkedinText: |
+    First paragraph of the post, "quotes" and all.
+
+    Second paragraph.
+```
 
 ### `layout` does less than it sounds like
 
