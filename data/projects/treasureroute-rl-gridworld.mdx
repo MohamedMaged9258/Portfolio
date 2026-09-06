@@ -1,0 +1,109 @@
+---
+title: "Treasure Escape Gridworld"
+slug: "treasureroute-rl-gridworld"
+summary: "A reinforcement-learning study comparing Value Iteration, Q-Learning and REINFORCE on a custom warehouse Gridworld, with reproducible experiments, evaluation tooling and automated result verification."
+stack: ["Python", "NumPy", "Reinforcement Learning", "Matplotlib", "Pandas", "PyYAML", "pytest", "GitHub Actions"]
+date: "2026-09"
+layout: "case-study"
+links:
+  github: "https://github.com/MohamedMaged9258/treasureroute-rl-gridworld"
+featured: true
+---
+
+## The problem
+
+I built **Treasure Escape Gridworld** as my AIE322 Advanced Machine Learning final project to study how different reinforcement-learning approaches behave when solving the same sequential decision-making problem.
+
+The environment models an autonomous warehouse robot on a custom 8×8 grid. The robot starts at a docking station, must collect a package, and then deliver it to the goal. Shelves block movement, hazard cells carry penalties, and reaching the delivery station only completes the task after the package has been collected.
+
+The challenge was not just to make an agent reach the goal, but to create a controlled environment where model-based and model-free algorithms could be compared fairly under identical dynamics, rewards and evaluation criteria.
+
+## What I built
+
+I implemented the environment and reinforcement-learning pipeline from scratch in Python and NumPy, using a shared interface so every agent is evaluated in the same way.
+
+The project includes:
+
+- A custom **Markov Decision Process (MDP)** with 98 states based on position and package status.
+- Deterministic transitions and an optional stochastic mode with movement slip.
+- A configurable reward model for movement, invalid actions, hazards, package collection and successful delivery.
+- **Value Iteration** as the model-based dynamic-programming benchmark.
+- **Q-Learning** as an off-policy temporal-difference learner.
+- **REINFORCE** using a tabular softmax policy.
+- A **REINFORCE with learned value baseline** variant for studying variance reduction.
+- A random policy as an untrained baseline.
+- Shared experiment, evaluation and visualization tooling for comparing all agents.
+
+## Environment design
+
+The state is represented as:
+
+`(row, column, package_collected)`
+
+The warehouse contains 49 walkable cells, and tracking whether the package has been collected produces 98 possible states.
+
+The agent has four actions: up, down, left and right. In deterministic mode, the selected action is executed directly. In stochastic mode, the intended action occurs with probability 0.8, while the agent can slip left or right with probability 0.1 each.
+
+The reward function distinguishes between ordinary movement, invalid moves, hazards, collecting the package and reaching the goal. An episode terminates only when the robot reaches the delivery station while carrying the package, with a 256-step cap used for truncation.
+
+## A shared transition model
+
+A key design decision was to build a single `TransitionModel` that enumerates the outcomes of every state-action pair.
+
+Both the environment and Value Iteration consume this same transition data: `env.step()` samples from it during interaction, while Value Iteration sweeps over it directly. This means the planning algorithm and the learning agents are solving exactly the same MDP rather than slightly different implementations of the environment.
+
+That made Value Iteration a meaningful upper-bound reference for the model-free learners.
+
+## Experiments and evaluation
+
+I built an experiment pipeline that runs algorithms across multiple fixed random seeds and records the configuration, learned parameters, per-episode metrics and library versions used for each run.
+
+The evaluation covers both deterministic and stochastic environments and measures:
+
+- Mean return
+- Success rate
+- Number of steps
+- Training time
+- Learned policy behaviour
+- Sensitivity to reward design and hyperparameters
+
+The full study contains **109 runs** across five seeds.
+
+## Results
+
+In the deterministic environment, Value Iteration and Q-Learning both reached the optimal **+104 return with a 100% success rate in 18 steps**.
+
+Value Iteration solved the MDP in 22 sweeps, while Q-Learning recovered the same optimal policy using sampled experience rather than access to the transition model.
+
+Under stochastic transitions, Value Iteration achieved a mean return of **+83.36** and Q-Learning achieved **+83.33**, with both maintaining a 100% success rate.
+
+Plain REINFORCE also solved the task consistently, although its learned policy could sometimes favour a shortest route that crossed hazards. The value-baseline variant performed worse on this specific task, showing that variance reduction is not automatically beneficial when it reduces an already sparse learning signal.
+
+The experiments also showed that sparse rewards were enough for Q-Learning to discover successful routes, but not enough to reliably teach hazard avoidance.
+
+## Reproducibility and engineering
+
+I treated reproducibility as part of the project rather than an afterthought.
+
+Each stochastic component uses its own seeded `numpy.random.Generator`, and experiments run over the same five seeds: 42, 123, 256, 512 and 1024.
+
+The repository includes:
+
+- Automated environment, algorithm and integration tests with `pytest`.
+- Ruff linting.
+- GitHub Actions CI.
+- Configuration-driven experiments using YAML.
+- Analysis scripts that regenerate tables and figures directly from committed results.
+- Consistency checks that detect differences between generated analysis artifacts and committed outputs.
+- A Google Colab workflow for running the project without a local setup.
+- A 25-page final report with generated figures and tables linked back to experiment results.
+
+The analysis pipeline can reproduce **113 figures and 15 tables** from the committed result data without retraining the agents.
+
+## What I learned
+
+This project gave me practical experience turning reinforcement-learning theory into a reproducible experimental system.
+
+Beyond implementing Value Iteration, Q-Learning and policy gradients, I learned how environment design, reward shaping, stochastic dynamics, truncation handling and variance reduction can materially change what an RL agent learns.
+
+It also reinforced the importance of experiment reproducibility: seeded randomness, common evaluators, traceable configurations, automated tests and generated reports made the algorithm comparisons much more reliable than looking at individual training runs.

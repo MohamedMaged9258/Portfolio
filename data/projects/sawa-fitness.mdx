@@ -1,0 +1,62 @@
+---
+title: "SAWA Fitness"
+slug: "sawa-fitness"
+summary: "A Flutter and Firebase multi-sided fitness marketplace connecting members with gyms, nutritionists, and healthy restaurants through role-based booking, meal planning, ordering, and business dashboards."
+stack: ["Flutter", "Dart", "Firebase", "Provider", "Cloud Firestore", "Firebase Auth", "Firebase Storage"]
+date: "2025-12"
+layout: "case-study"
+links:
+  github: "https://github.com/MohamedMaged9258/sawa"
+featured: false
+---
+
+## The problem
+
+Fitness services are often split across separate apps and disconnected workflows: one place for gym access, another for nutrition advice, and another for healthy food. Service providers face the same fragmentation on the other side, managing customers, schedules, menus, staff, and business activity independently.
+
+SAWA Fitness brings those workflows into one application, with a different experience for each type of user while keeping the underlying data connected.
+
+## What I built
+
+SAWA Fitness is a multi-role Flutter application backed by Firebase. The app supports four distinct user experiences from the same codebase:
+
+- **Members** can browse gyms, book workout sessions, discover nutritionists, schedule consultations, view assigned meal plans, order healthy meals, and track activity from a personal dashboard.
+- **Gym owners** can manage gym locations and coaches, store facility images, review bookings, and monitor statistics such as active members and revenue.
+- **Restaurant owners** can manage restaurants and menu items, upload meal images, control meal availability, process customer orders, update order status, and view business statistics.
+- **Nutritionists** can manage clients, create and update meal plans, organize consultations, change consultation status, and monitor client and session activity.
+
+## Role-based authentication
+
+Authentication is handled with Firebase Authentication using email and password. During registration, each account is stored in Cloud Firestore with its selected role. The application reads that role after authentication and routes the user into the appropriate member, gym owner, restaurant owner, or nutritionist experience.
+
+This keeps one authentication flow at the center of the application while allowing each role to have its own screens and business logic.
+
+## Data and application architecture
+
+The project uses a layered structure that separates UI screens, models, provider logic, and reusable widgets. Provider is used for application state management, while the data layer communicates with Firebase services.
+
+Cloud Firestore stores the main application data, including users, gyms, coaches, bookings, restaurants, meals, orders, nutrition clients, meal plans, and consultations. Firebase Storage is used for uploaded images such as gym, coach, restaurant, and meal photos.
+
+Keeping the Firebase operations in provider classes lets the screens focus on presentation and interaction rather than directly handling persistence logic.
+
+## Connected member workflows
+
+One of the main goals was making the different parts of the platform work together instead of behaving like isolated demos. A member can create a gym booking, place a restaurant order, or schedule a nutrition consultation, and those records feed back into the relevant dashboards.
+
+The member dashboard combines gym bookings and nutrition consultations to determine upcoming appointments, while also summarizing gym visits, meals ordered, nutritionist sessions, active meal plans, and recent activity.
+
+## Provider dashboards
+
+The business-facing dashboards are calculated from stored application data rather than static placeholder values.
+
+Gym owners can see the number of gyms and coaches they manage, unique members using their gyms, and revenue derived from active bookings. Restaurant owners can monitor restaurants, menu items, orders, pending orders, unique customers, and revenue from non-cancelled orders. Nutritionists can track clients, active meal plans, scheduled consultations, and completed sessions.
+
+## Testing
+
+The repository includes unit, widget, and integration test structure. Tests cover areas such as authentication providers, member logic, login and registration screens, the member home screen, reusable widgets, authentication flows, and meal-plan workflows. Mockito and `build_runner` are included for generated test mocks.
+
+## What this project demonstrates
+
+SAWA Fitness was a larger application-design exercise than building a single CRUD interface. It required coordinating multiple user roles, shared backend collections, authentication state, image storage, booking and ordering workflows, dashboards, and reusable Flutter UI patterns inside one application.
+
+The result is a unified fitness marketplace architecture where consumer actions and provider management tools operate on the same Firebase-backed data model.
