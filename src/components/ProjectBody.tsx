@@ -6,7 +6,7 @@ import type { Project } from '../lib/projects'
 import { cn } from '../lib/cn'
 
 /**
- * The write-up itself — everything from the eyebrow down through the MDX body,
+ * The write-up itself — everything from the meta line down through the MDX body,
  * with no page chrome. Rendered by both ProjectDetail (full page) and ProjectModal
  * (overlay) so the two views can't drift apart.
  *
@@ -25,22 +25,15 @@ export default function ProjectBody({
 
   return (
     <>
-      <p className="eyebrow">{isLog ? '// build log' : '// case study'}</p>
-      <h1 id={titleId} className="mt-3 text-3xl font-bold tracking-tight text-slate-50 sm:text-4xl">
+      <p className="font-mono text-xs text-ink-subtle">
+        {isLog ? 'Build log' : 'Case study'} / {project.date}
+      </p>
+      <h1 id={titleId} className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
         {project.title}
       </h1>
-      <p className="mt-4 text-lg leading-relaxed text-slate-400">{project.summary}</p>
+      <p className="mt-4 max-w-[65ch] text-lg leading-relaxed">{project.summary}</p>
 
-      <div className="mt-5 flex flex-wrap gap-1.5">
-        {project.stack.map((t) => (
-          <span
-            key={t}
-            className="rounded border border-line bg-surface px-2 py-0.5 font-mono text-[11px] text-slate-400"
-          >
-            {t}
-          </span>
-        ))}
-      </div>
+      <p className="mt-4 font-mono text-xs text-ink-subtle">{project.stack.join(' / ')}</p>
 
       {links && (links.github || links.live || links.linkedin) && (
         <div className="mt-5 flex flex-wrap items-center gap-4">
@@ -49,7 +42,7 @@ export default function ProjectBody({
               href={links.github}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-2 text-sm text-slate-300 transition hover:text-accent"
+              className="inline-flex items-center gap-2 text-sm text-ink transition hover:text-accent"
             >
               <FaGithub className="h-4 w-4" />
               Source
@@ -60,7 +53,7 @@ export default function ProjectBody({
               href={links.live}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-2 text-sm text-slate-300 transition hover:text-accent"
+              className="inline-flex items-center gap-2 text-sm text-ink transition hover:text-accent"
             >
               <ExternalLink className="h-4 w-4" />
               Live
@@ -74,7 +67,7 @@ export default function ProjectBody({
               // is another profile of the same person, and a post *about* the project isn't
               // an identity claim. The subjectOf node in prerender.mjs states the real relation.
               rel="noreferrer"
-              className="inline-flex items-center gap-2 text-sm text-slate-300 transition hover:text-accent"
+              className="inline-flex items-center gap-2 text-sm text-ink transition hover:text-accent"
             >
               <FaLinkedinIn className="h-4 w-4" />
               LinkedIn
@@ -88,11 +81,11 @@ export default function ProjectBody({
       <article
         className={cn(
           'prose prose-invert mt-8 max-w-none',
-          'prose-headings:font-semibold prose-headings:text-slate-100',
+          'prose-headings:font-semibold prose-headings:tracking-tight prose-headings:text-ink',
           'prose-a:text-accent prose-a:no-underline hover:prose-a:underline',
-          'prose-strong:text-slate-100',
-          'prose-code:text-cyan-300 prose-code:before:content-none prose-code:after:content-none',
-          'prose-pre:border prose-pre:border-line prose-pre:bg-surface',
+          'prose-strong:text-ink',
+          'prose-code:text-accent prose-code:before:content-none prose-code:after:content-none',
+          'prose-pre:rounded prose-pre:border prose-pre:border-line prose-pre:bg-surface',
           isLog && 'lg:prose-lg',
         )}
       >

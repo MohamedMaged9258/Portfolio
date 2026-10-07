@@ -23,29 +23,20 @@ export default function CertificateBody({
 
   return (
     <>
-      <p className="eyebrow">// certificate</p>
-      <h1 id={titleId} className="mt-3 text-3xl font-bold tracking-tight text-slate-50 sm:text-4xl">
+      <p className="font-mono text-xs text-ink-subtle">Certificate</p>
+      <h1 id={titleId} className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
         {title}
       </h1>
 
-      <p className="mt-4 font-mono text-sm text-slate-400">
-        {issuer} · {formatCertificateDate(date)}
-        {credentialId && <> · ID {credentialId}</>}
+      <p className="mt-4 font-mono text-sm text-ink-muted">
+        {issuer} / {formatCertificateDate(date)}
+        {credentialId && <> / ID {credentialId}</>}
       </p>
 
-      <p className="mt-4 text-lg leading-relaxed text-slate-400">{certificate.summary}</p>
+      <p className="mt-4 max-w-[65ch] text-lg leading-relaxed">{certificate.summary}</p>
 
       {skills && skills.length > 0 && (
-        <div className="mt-5 flex flex-wrap gap-1.5">
-          {skills.map((s) => (
-            <span
-              key={s}
-              className="rounded border border-line bg-surface px-2 py-0.5 font-mono text-[11px] text-slate-400"
-            >
-              {s}
-            </span>
-          ))}
-        </div>
+        <p className="mt-4 font-mono text-xs text-ink-subtle">{skills.join(' / ')}</p>
       )}
 
       {url && (
@@ -54,7 +45,7 @@ export default function CertificateBody({
             href={url}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-2 text-sm text-slate-300 transition hover:text-accent"
+            className="inline-flex items-center gap-2 text-sm text-ink transition hover:text-accent"
           >
             <ExternalLink className="h-4 w-4" />
             Verify
@@ -66,7 +57,7 @@ export default function CertificateBody({
         <img
           src={image}
           alt={`${title} certificate`}
-          className="mt-8 w-full rounded-lg border border-line"
+          className="mt-8 w-full rounded border border-line"
         />
       )}
 
@@ -76,7 +67,7 @@ export default function CertificateBody({
         <>
           <hr className="mt-8 border-line" />
           <article
-            className="prose prose-invert mt-8 max-w-none prose-headings:font-semibold prose-headings:text-slate-100 prose-a:text-accent prose-a:no-underline hover:prose-a:underline prose-strong:text-slate-100 prose-code:text-cyan-300 prose-code:before:content-none prose-code:after:content-none prose-pre:border prose-pre:border-line prose-pre:bg-surface"
+            className="prose prose-invert mt-8 max-w-none prose-headings:font-semibold prose-headings:tracking-tight prose-headings:text-ink prose-a:text-accent prose-a:no-underline hover:prose-a:underline prose-strong:text-ink prose-code:text-accent prose-code:before:content-none prose-code:after:content-none prose-pre:rounded prose-pre:border prose-pre:border-line prose-pre:bg-surface"
           >
             <MDXProvider components={mdxComponents}>
               <Component />

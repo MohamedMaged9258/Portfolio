@@ -7,7 +7,7 @@ import ProjectCard from '../components/ProjectCard'
 import { projects } from '../lib/projects'
 import { useDocumentMeta } from '../lib/useDocumentMeta'
 import { profile } from '../lib/profile'
-import { rise, slideIn, stagger, viewportOnce } from '../lib/motion'
+import { WIPE_CLASS, rise, stagger, viewportOnce, wipe } from '../lib/motion'
 
 export default function ProjectsIndex() {
   useDocumentMeta({
@@ -20,7 +20,7 @@ export default function ProjectsIndex() {
     <PageTransition>
       <SiteHeader />
 
-      <main>
+      <main id="main" tabIndex={-1} className="outline-none">
         <Container className="py-12 sm:py-16">
           <motion.header
             className="mb-10"
@@ -28,22 +28,19 @@ export default function ProjectsIndex() {
             animate="show"
             variants={stagger(0.08)}
           >
-            <motion.p variants={slideIn} className="eyebrow">
-              // projects
-            </motion.p>
             <motion.h1
-              variants={rise}
-              className="mt-2 text-3xl font-bold tracking-tight text-slate-50 sm:text-4xl"
+              variants={wipe}
+              className={`text-3xl font-semibold tracking-tight sm:text-4xl ${WIPE_CLASS}`}
             >
               Projects
             </motion.h1>
-            <motion.p variants={rise} className="mt-4 max-w-2xl text-lg leading-relaxed text-slate-400">
-              Everything I&apos;ve written up — case studies and build logs.
+            <motion.p variants={rise} className="mt-4 max-w-[65ch] text-lg leading-relaxed">
+              Everything I&apos;ve written up: case studies and build logs.
             </motion.p>
           </motion.header>
 
           <motion.div
-            className="grid gap-4 sm:grid-cols-2"
+            className="divide-y divide-line"
             initial="hidden"
             whileInView="show"
             viewport={viewportOnce}

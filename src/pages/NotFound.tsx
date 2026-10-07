@@ -29,18 +29,18 @@ export default function NotFound() {
   return (
     <PageTransition>
       <SiteHeader />
-      <main>
-        <Container className="flex min-h-[60vh] flex-col items-center justify-center py-20 text-center">
-          <p className="eyebrow">// 404</p>
-          <h1 className="mt-3 text-3xl font-bold tracking-tight text-slate-50 sm:text-4xl">
+      <main id="main" tabIndex={-1} className="outline-none">
+        <Container className="flex min-h-[60vh] flex-col justify-center py-20">
+          <p className="font-mono text-xs text-ink-subtle">404</p>
+          <h1 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
             No route here
           </h1>
-          <p className="mt-4 max-w-md text-lg leading-relaxed text-slate-400">
-            That page doesn&apos;t exist — it may have moved, or the link was mistyped.
+          <p className="mt-4 max-w-md text-lg leading-relaxed">
+            That page doesn&apos;t exist. It may have moved, or the link was mistyped.
           </p>
           <Link
             to="/"
-            className="mt-8 inline-flex items-center gap-2 rounded-md bg-accent px-4 py-2.5 text-sm font-semibold text-bg transition hover:brightness-110"
+            className="mt-8 inline-flex w-fit items-center gap-2 rounded bg-accent px-4 py-2 text-sm font-semibold text-bg transition hover:brightness-110 active:scale-[0.98]"
           >
             <ArrowLeft className="h-4 w-4" />
             Back home

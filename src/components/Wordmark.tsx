@@ -34,9 +34,9 @@ export default function Wordmark({ className }: { className?: string }) {
     <Link
       to="/"
       onClick={handleClick}
-      className={cn('inline-flex items-center gap-2 font-mono text-sm text-slate-200', className)}
+      className={cn('inline-flex items-center gap-2 font-mono text-sm text-ink', className)}
     >
-      <span className="grid h-7 w-7 place-items-center rounded-md border border-line bg-surface text-accent">
+      <span className="grid h-7 w-7 place-items-center rounded border border-line bg-surface text-accent">
         M
       </span>
       {/* Hidden below sm, but kept in the accessibility tree — as `hidden sm:inline`

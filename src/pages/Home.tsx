@@ -1,4 +1,4 @@
-import SiteHeader from '../components/SiteHeader'
+import SiteHeader, { sectionIds } from '../components/SiteHeader'
 import Hero from '../components/Hero'
 import About from '../components/About'
 import Experience from '../components/Experience'
@@ -9,6 +9,7 @@ import Contact from '../components/Contact'
 import Footer from '../components/Footer'
 import PageTransition from '../components/PageTransition'
 import { useDocumentMeta } from '../lib/useDocumentMeta'
+import { ActiveSectionContext, useActiveSection } from '../lib/useActiveSection'
 import { profile } from '../lib/profile'
 
 export default function Home() {
@@ -22,20 +23,25 @@ export default function Home() {
     path: '/',
   })
 
+  // Computed once here so the header nav and every section rail agree.
+  const active = useActiveSection(sectionIds)
+
   return (
-    <PageTransition>
-      <SiteHeader />
-      <main>
-        <Hero />
-        <About />
-        <Experience />
-        <Projects />
-        {/* Renders nothing while no data/certificates/*.mdx is marked featured. */}
-        <Certificates />
-        <Skills />
-        <Contact />
-      </main>
-      <Footer />
-    </PageTransition>
+    <ActiveSectionContext.Provider value={active}>
+      <PageTransition>
+        <SiteHeader />
+        <main id="main" tabIndex={-1} className="outline-none">
+          <Hero />
+          <About />
+          <Experience />
+          <Projects />
+          {/* Renders nothing while no data/certificates/*.mdx is marked featured. */}
+          <Certificates />
+          <Skills />
+          <Contact />
+        </main>
+        <Footer />
+      </PageTransition>
+    </ActiveSectionContext.Provider>
   )
 }

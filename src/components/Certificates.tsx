@@ -13,12 +13,11 @@ export default function Certificates() {
   return (
     <Section
       id="certificates"
-      eyebrow="// certificates"
       title="Certificates"
       action={<ViewAllLink to="/certificates" label="View all" />}
     >
       <motion.div
-        className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+        className="grid border-l border-t border-line sm:grid-cols-2"
         initial="hidden"
         whileInView="show"
         viewport={viewportOnce}

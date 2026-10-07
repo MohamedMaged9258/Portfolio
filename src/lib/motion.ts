@@ -16,11 +16,6 @@ export const rise: Variants = {
   show: { opacity: 1, y: 0, transition: { duration: DUR.reveal, ease: EASE } },
 }
 
-export const slideIn: Variants = {
-  hidden: { opacity: 0, x: -8 },
-  show: { opacity: 1, x: 0, transition: { duration: DUR.reveal, ease: EASE } },
-}
-
 /** Smaller, faster sibling of `rise` for chips, pills and list bullets. */
 export const pop: Variants = {
   hidden: { opacity: 0, y: 4 },
@@ -37,11 +32,29 @@ export const riseStagger = (each = 0.04): Variants => ({
   },
 })
 
-/** Vertical rail draw, for the Experience trace waterfall. Needs `origin-top`. */
-export const drawY: Variants = {
-  hidden: { scaleY: 0 },
-  show: { scaleY: 1, transition: { duration: DUR.draw, ease: EASE } },
+/**
+ * Heading reveal: a left-to-right wipe, like a scan line passing over the text.
+ * Vertical insets are negative so descenders and accents aren't shaved during the
+ * wipe, and the clip is dropped entirely once it lands.
+ *
+ * clip-path is a paint animation rather than a compositor one; that's accepted here
+ * because it only runs once, on short headings. Pair every use with WIPE_CLASS:
+ * MotionConfig's reducedMotion doesn't cover clip-path, so the CSS override is what
+ * turns this into a plain fade for reduced-motion users (and it can't diverge from
+ * the prerendered HTML the way a useReducedMotion() branch would).
+ */
+export const wipe: Variants = {
+  hidden: { opacity: 0, clipPath: 'inset(-20% 100% -20% 0)' },
+  show: {
+    opacity: 1,
+    clipPath: 'inset(-20% 0% -20% 0)',
+    transition: { duration: 0.7, ease: EASE },
+    transitionEnd: { clipPath: 'none' },
+  },
 }
+
+/** Required alongside `wipe`; see above. */
+export const WIPE_CLASS = 'motion-reduce:[clip-path:none]!'
 
 /** One-shot liveness probe: a disc that expands past its anchor and fades out. */
 export const probeOnce: Variants = {

@@ -1,34 +1,34 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
-/* ---- Design tokens (dark, engineering-leaning) ---- */
+/* ---- Design tokens: dark "ops console" ----
+   One warm-graphite neutral family plus a single amber signal. Text tokens are
+   checked against --color-bg: ink-muted ~7:1, ink-subtle ~5:1 (both pass AA). */
 @theme {
-  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "JetBrains Mono Variable", ui-monospace, SFMono-Regular, monospace;
+  --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono Variable", ui-monospace, SFMono-Regular, monospace;
 
-  --color-bg: #0a0e14;
-  --color-surface: #0f151e;
-  --color-elevated: #141c27;
-  --color-line: #1e2732;
-  --color-accent: #22d3ee;
-  --color-accent-soft: #164e57;
+  --color-bg: #0e0d0c;
+  --color-surface: #161412;
+  --color-line: #2a2724;
+  --color-ink: #ece8e3;
+  --color-ink-muted: #a8a29e;
+  --color-ink-subtle: #8a837d;
+  --color-accent: #e3a74f;
 
   /* ---- Motion vocabulary ---- */
   --ease-signal: cubic-bezier(0.16, 1, 0.3, 1); /* expo-out: arrives fast, settles */
   --ease-probe: cubic-bezier(0, 0, 0.2, 1);
 
-  --animate-scan: scan 10s linear infinite;
   --animate-probe: probe 2.6s var(--ease-probe) infinite;
 
-  /* Sweeps the accent grid's mask left→right. Travel is set so the band clears
-     both edges completely: with mask-size 200%, the band sits at 84%–116% of the
-     element minus the position value, so 118% → -18% enters and exits off-screen. */
-  @keyframes scan {
+  /* The ambient light's slow wander. Transform only, so it stays on the compositor. */
+  @keyframes drift {
     from {
-      mask-position: 118% 0;
+      transform: translate3d(0, 0, 0) scale(1);
     }
     to {
-      mask-position: -18% 0;
+      transform: translate3d(-6vmax, 4vmax, 0) scale(1.08);
     }
   }
 
@@ -54,17 +54,56 @@
   }
 
   body {
-    @apply bg-bg text-slate-300 font-sans antialiased;
+    @apply bg-bg text-ink-muted font-sans antialiased;
+  }
+
+  /* Ambient background, shared by every route. Both layers are fixed and sit at
+     z-index -1, which paints them above the canvas (where body's background lands)
+     and below all page content. Pseudo-elements rather than a component, so the
+     prerendered HTML carries them with no hydration involved. */
+
+  /* One soft amber light, high on the portrait side, drifting slowly. It is
+     oversized (inset -20vmax) so the drift never exposes its edge; being fixed,
+     it can't add scroll width. */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: -20vmax;
+    z-index: -1;
+    pointer-events: none;
+    background: radial-gradient(
+      ellipse 45% 40% at 72% 30%,
+      color-mix(in oklab, var(--color-accent) 9%, transparent),
+      transparent 70%
+    );
+    animation: drift 32s var(--ease-probe) infinite alternate;
+  }
+
+  /* Film grain so the flat graphite reads as a surface. Static. */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 180px;
   }
 
   h1, h2, h3, h4 {
-    @apply text-slate-100;
+    @apply text-ink;
     text-wrap: balance;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
   }
 
   ::selection {
     background-color: color-mix(in oklab, var(--color-accent) 30%, transparent);
-    color: #fff;
+    color: var(--color-ink);
   }
 
   * {
@@ -72,42 +111,6 @@
   }
 }
 
-@layer components {
-  /* subtle dotted grid used behind the hero */
-  .bg-grid {
-    background-image: radial-gradient(circle at 1px 1px, var(--color-line) 1px, transparent 0);
-    background-size: 26px 26px;
-  }
-
-  /* An accent copy of .bg-grid, revealed through a narrow travelling mask so the
-     dots brighten as the scan passes. Held still and identically sized to .bg-grid
-     so its dots stay in phase — translating the layer instead would drag its
-     background with it and make the two grids shimmer against each other. */
-  .bg-grid-scan {
-    /* Dots are a touch larger than .bg-grid's 1px so a lit dot blooms past the
-       static one underneath, plus a faint wash so the band itself has presence. */
-    background-image:
-      radial-gradient(circle at 1px 1px, var(--color-accent) 1.5px, transparent 0),
-      linear-gradient(
-        0deg,
-        color-mix(in oklab, var(--color-accent) 7%, transparent),
-        color-mix(in oklab, var(--color-accent) 7%, transparent)
-      );
-    background-size:
-      26px 26px,
-      100% 100%;
-    mask-image: linear-gradient(90deg, transparent 42%, #000 48%, #000 52%, transparent 58%);
-    mask-size: 200% 100%;
-    mask-repeat: no-repeat;
-    /* Parked off-screen so no sliver shows on the frame before the sweep starts. */
-    mask-position: 118% 0;
-  }
-
-  /* small monospace eyebrow label used on section headers */
-  .eyebrow {
-    @apply font-mono text-xs tracking-widest uppercase text-accent;
-  }
-}
 
 @media (prefers-reduced-motion: reduce) {
   html {
@@ -120,10 +123,5 @@
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
-  }
-
-  /* A frozen scan band would read as a rendering bug, so drop it entirely. */
-  .bg-grid-scan {
-    display: none;
   }
 }
