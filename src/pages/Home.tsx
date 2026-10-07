@@ -25,7 +25,7 @@ export default function Home() {
   return (
     <PageTransition>
       <SiteHeader />
-      <main>
+      <main id="main" tabIndex={-1} className="outline-none">
         <Hero />
         <About />
         <Experience />

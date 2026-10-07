@@ -5,7 +5,7 @@ import { pop, rise, riseStagger, stagger, viewportOnce } from '../lib/motion'
 
 export default function About() {
   return (
-    <Section id="about" eyebrow="// about" title="About">
+    <Section id="about" title="About">
       <motion.div
         className="grid gap-8 md:grid-cols-3"
         initial="hidden"

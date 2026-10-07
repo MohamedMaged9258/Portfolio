@@ -5,7 +5,7 @@ import { drawY, pop, probeOnce, riseStagger, stagger, viewportOnce } from '../li
 
 export default function Experience() {
   return (
-    <Section id="experience" eyebrow="// experience" title="Experience">
+    <Section id="experience" title="Experience">
       {/* The timeline reveals like a trace being collected: the rail draws top-down,
           each role lands with a liveness probe, then its highlights tail in. The rail
           lives outside the <ol> so it stays clear of space-y-10's child selector. */}

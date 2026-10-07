@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, type MouseEvent } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from 'motion/react'
 import { Menu, X } from 'lucide-react'
@@ -86,17 +86,34 @@ export default function SiteHeader() {
   // backing regardless of scroll position.
   const solid = scrolled || open
 
+  // Moves focus without touching the URL: a bare href="#main" would set
+  // location.hash and send useScrollToHash scrolling as well.
+  const skipToMain = (e: MouseEvent<HTMLAnchorElement>) => {
+    const main = document.getElementById('main')
+    if (!main) return
+    e.preventDefault()
+    main.focus({ preventScroll: true })
+    main.scrollIntoView()
+  }
+
   return (
     <header
       className={cn(
         'sticky top-0 z-50 border-b transition-colors duration-300',
-        solid ? 'border-line/70 bg-bg/80 backdrop-blur' : 'border-transparent',
+        solid ? 'border-line bg-bg/85 backdrop-blur' : 'border-transparent',
       )}
     >
-      <nav className="mx-auto flex h-16 max-w-5xl items-center justify-between px-5 sm:px-8">
+      <a
+        href="#main"
+        onClick={skipToMain}
+        className="sr-only rounded bg-accent px-3 py-2 text-sm font-semibold text-bg focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:z-10"
+      >
+        Skip to content
+      </a>
+      <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 sm:px-8">
         <Wordmark />
 
-        {/* lg, not md: six items plus Socials plus Résumé overflow the max-w-5xl bar
+        {/* lg, not md: six items plus Socials plus Résumé overflow the max-w-6xl bar
             at 768px, so the 768–1024px band gets the mobile menu instead. */}
         <div className="hidden items-center gap-1 lg:flex">
           {navItems.map((item) => {
@@ -107,8 +124,8 @@ export default function SiteHeader() {
                 to={item.to}
                 aria-current={activeItem ? 'true' : undefined}
                 className={cn(
-                  'relative rounded-md px-3 py-2 text-sm transition-colors',
-                  activeItem ? 'text-slate-100' : 'text-slate-400 hover:text-slate-100',
+                  'relative rounded px-3 py-2 text-sm transition-colors',
+                  activeItem ? 'text-ink' : 'text-ink-muted hover:text-ink',
                 )}
               >
                 {item.label}
@@ -134,7 +151,7 @@ export default function SiteHeader() {
           onClick={() => setOpen((v) => !v)}
           aria-label={open ? 'Close menu' : 'Open menu'}
           aria-expanded={open}
-          className="grid h-9 w-9 place-items-center rounded-md text-slate-300 transition hover:bg-surface lg:hidden"
+          className="grid h-9 w-9 place-items-center rounded text-ink-muted transition hover:bg-surface hover:text-ink lg:hidden"
         >
           <AnimatePresence mode="wait" initial={false}>
             <motion.span
@@ -164,7 +181,7 @@ export default function SiteHeader() {
             transition={{ duration: 0.28, ease: EASE }}
           >
             <div className="border-t border-line bg-bg">
-              <div className="mx-auto max-w-5xl px-5 py-4 sm:px-8">
+              <div className="mx-auto max-w-6xl px-5 py-4 sm:px-8">
                 <div className="flex flex-col">
                   {navItems.map((item) => (
                     <Link
@@ -172,8 +189,8 @@ export default function SiteHeader() {
                       to={item.to}
                       onClick={() => setOpen(false)}
                       className={cn(
-                        'rounded-md px-2 py-2.5 text-sm transition hover:bg-surface hover:text-white',
-                        isActive(item) ? 'text-slate-100' : 'text-slate-300',
+                        'rounded px-2 py-2.5 text-sm transition hover:bg-surface hover:text-ink',
+                        isActive(item) ? 'text-ink' : 'text-ink-muted',
                       )}
                     >
                       {item.label}

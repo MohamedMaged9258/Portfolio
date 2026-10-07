@@ -29,7 +29,7 @@ export default function NotFound() {
   return (
     <PageTransition>
       <SiteHeader />
-      <main>
+      <main id="main" tabIndex={-1} className="outline-none">
         <Container className="flex min-h-[60vh] flex-col items-center justify-center py-20 text-center">
           <p className="eyebrow">// 404</p>
           <h1 className="mt-3 text-3xl font-bold tracking-tight text-slate-50 sm:text-4xl">

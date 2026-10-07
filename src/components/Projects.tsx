@@ -9,7 +9,6 @@ export default function Projects() {
   return (
     <Section
       id="projects"
-      eyebrow="// projects"
       title="Projects"
       // The home section is a preview: only frontmatter-tagged `featured: true`
       // projects land here, the full set lives at /projects.

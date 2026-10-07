@@ -9,7 +9,7 @@ export default function Contact() {
   const availability = profile.availability ? profile.availability.toLowerCase() : 'open to new opportunities'
 
   return (
-    <Section id="contact" eyebrow="// contact" title="Get in touch">
+    <Section id="contact" title="Contact">
       <motion.div
         className="rounded-xl border border-line bg-surface p-8 text-center"
         initial="hidden"

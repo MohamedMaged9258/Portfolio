@@ -13,7 +13,6 @@ export default function Certificates() {
   return (
     <Section
       id="certificates"
-      eyebrow="// certificates"
       title="Certificates"
       action={<ViewAllLink to="/certificates" label="View all" />}
     >

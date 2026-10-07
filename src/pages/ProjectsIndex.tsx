@@ -20,7 +20,7 @@ export default function ProjectsIndex() {
     <PageTransition>
       <SiteHeader />
 
-      <main>
+      <main id="main" tabIndex={-1} className="outline-none">
         <Container className="py-12 sm:py-16">
           <motion.header
             className="mb-10"

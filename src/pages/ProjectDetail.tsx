@@ -42,7 +42,7 @@ function ProjectPage({ project }: { project: Project }) {
     <PageTransition>
       <SiteHeader />
 
-      <main>
+      <main id="main" tabIndex={-1} className="outline-none">
         <Container className="py-12 sm:py-16">
           <div className="mx-auto max-w-2xl">
             <Link

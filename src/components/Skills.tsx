@@ -5,7 +5,7 @@ import { pop, riseStagger, stagger, viewportOnce } from '../lib/motion'
 
 export default function Skills() {
   return (
-    <Section id="skills" eyebrow="// skills" title="Technical Skills">
+    <Section id="skills" title="Skills">
       {/* Two-level stagger: cards at 0.04, pills at 0.02 inside each. Kept tight so
           the last pill lands well under a second — six groups drag otherwise. */}
       <motion.div
