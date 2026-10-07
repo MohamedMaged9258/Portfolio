@@ -9,11 +9,11 @@ export default function Footer() {
             before New Year would otherwise trip a hydration mismatch on this text node.
             Keeping the built year is the honest answer for a static page anyway — it
             says when the site was published, not when you happened to open it. */}
-        <p className="font-mono text-xs text-slate-500" suppressHydrationWarning>
+        <p className="font-mono text-xs text-ink-subtle" suppressHydrationWarning>
           © {new Date().getFullYear()} {profile.name}
         </p>
-        <p className="font-mono text-xs text-slate-600">
-          Built with React, Vite &amp; Tailwind · Deployed on Cloudflare
+        <p className="font-mono text-xs text-ink-subtle">
+          Built with React, Vite and Tailwind. Deployed on Cloudflare.
         </p>
       </Container>
     </footer>

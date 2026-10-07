@@ -1,9 +1,8 @@
 import { useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, useInView } from 'motion/react'
-import { MapPin, ArrowUpRight } from 'lucide-react'
+import { ArrowUpRight } from 'lucide-react'
 import Container from './Container'
-import Socials from './Socials'
 import ResumeButton from './ResumeButton'
 import { profile } from '../lib/profile'
 import { cn } from '../lib/cn'
@@ -29,99 +28,81 @@ export default function Hero() {
         <div className={cn('absolute inset-0 bg-grid-scan', scanning && 'animate-scan')} />
       </motion.div>
 
-      <Container className="relative py-16 sm:py-24">
-        <div className="grid items-center gap-10 lg:grid-cols-5 lg:gap-14">
-          {/* Intro */}
+      <Container className="relative pb-16 pt-14 sm:pb-24 sm:pt-20">
+        <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-14">
+          {/* Intro: availability, name, one line of subtext, two actions. Location and
+              socials live in About and the header so the hero stays one moment. */}
           <motion.div
-            className="lg:col-span-3"
+            className="lg:col-span-7"
             initial="hidden"
             animate="show"
             variants={stagger(0.07, 0.1)}
           >
             {profile.availability && (
-              <motion.span
+              <motion.p
                 variants={rise}
-                className="inline-flex items-center gap-2 rounded-full border border-line bg-surface px-3 py-1 font-mono text-xs text-slate-400"
+                className="inline-flex items-center gap-2.5 font-mono text-xs text-ink-subtle"
               >
+                {/* The one status dot on the site: it states a real availability flag. */}
                 <span className="relative grid h-2 w-2 shrink-0 place-items-center">
                   <span className="absolute h-2 w-2 animate-probe rounded-full bg-accent" aria-hidden />
                   <span className="relative h-2 w-2 rounded-full bg-accent" />
                 </span>
                 {profile.availability}
-              </motion.span>
+              </motion.p>
             )}
 
             <motion.h1
               variants={rise}
-              className="mt-6 text-4xl font-bold tracking-tight text-slate-50 sm:text-6xl"
+              className="mt-6 text-4xl font-semibold leading-[1.05] tracking-tight sm:text-5xl"
             >
               {profile.name}
             </motion.h1>
-            <motion.p variants={rise} className="mt-3 font-mono text-lg text-accent sm:text-xl">
-              {profile.title}
+            <motion.p variants={rise} className="mt-5 max-w-[52ch] text-lg leading-relaxed text-ink-muted">
+              <span className="text-ink">{profile.title}.</span> {profile.tagline}
             </motion.p>
-            <motion.p
-              variants={rise}
-              className="mt-5 max-w-xl text-lg leading-relaxed text-slate-400"
-            >
-              {profile.tagline}
-            </motion.p>
-
-            <motion.div
-              variants={rise}
-              className="mt-4 inline-flex items-center gap-1.5 text-sm text-slate-500"
-            >
-              <MapPin className="h-4 w-4" />
-              {profile.location}
-            </motion.div>
 
             <motion.div variants={rise} className="mt-8 flex flex-wrap items-center gap-3">
               {/* A Link, not an anchor: a bare href="#projects" would scroll natively
                   and set location.hash, racing useScrollToHash's own scroll. */}
               <Link
                 to="/#projects"
-                className="inline-flex items-center gap-2 rounded-md bg-accent px-4 py-2.5 text-sm font-semibold text-bg transition hover:brightness-110"
+                className="inline-flex items-center gap-2 rounded bg-accent px-4 py-2 text-sm font-semibold text-bg transition hover:brightness-110 active:scale-[0.98]"
               >
                 View projects
                 <ArrowUpRight className="h-4 w-4" />
               </Link>
               <ResumeButton />
-              <Socials className="ml-1" />
             </motion.div>
           </motion.div>
 
           {/* Portrait */}
           <motion.div
-            className="lg:col-span-2 lg:order-first"
+            className="lg:col-span-5"
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.7, delay: 0.05, ease: EASE }}
           >
-            <div className="relative mx-auto w-full max-w-[16rem] lg:max-w-none">
-              {/* ambient accent glow */}
-              <div className="absolute -inset-4 -z-10 rounded-full bg-accent/10 blur-3xl" aria-hidden />
-              <div className="relative overflow-hidden rounded-2xl border border-line">
-                {/* alt carries the job title, not the word "portrait": it is the label
-                    Google Images matches against, and the query worth winning is the name
-                    plus a qualifier. Intrinsic dimensions and fetchPriority mark this as
-                    the page's principal image rather than decoration — aspect-[3/4] still
-                    drives the rendered size, so layout is unchanged. */}
-                <img
-                  src="/Profile.png"
-                  alt={`${profile.name}, ${profile.title}`}
-                  width={848}
-                  height={1264}
-                  loading="eager"
-                  fetchPriority="high"
-                  className="aspect-[3/4] w-full object-cover object-center"
-                />
-                {/* fade the photo into the page background */}
-                <div
-                  className="pointer-events-none absolute inset-0 bg-gradient-to-t from-bg/80 via-transparent to-transparent"
-                  aria-hidden
-                />
-                <div className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-white/5" aria-hidden />
-              </div>
+            <div className="relative mx-auto w-full max-w-[15rem] overflow-hidden rounded border border-line sm:max-w-[18rem] lg:ml-auto lg:mr-0 lg:max-w-sm">
+              {/* alt carries the job title, not the word "portrait": it is the label
+                  Google Images matches against, and the query worth winning is the name
+                  plus a qualifier. Intrinsic dimensions and fetchPriority mark this as
+                  the page's principal image rather than decoration — aspect-[3/4] still
+                  drives the rendered size, so layout is unchanged. */}
+              <img
+                src="/Profile.png"
+                alt={`${profile.name}, ${profile.title}`}
+                width={848}
+                height={1264}
+                loading="eager"
+                fetchPriority="high"
+                className="aspect-[3/4] w-full object-cover object-center"
+              />
+              {/* fade the photo into the page background */}
+              <div
+                className="pointer-events-none absolute inset-0 bg-gradient-to-t from-bg/70 via-transparent to-transparent"
+                aria-hidden
+              />
             </div>
           </motion.div>
         </div>

@@ -15,7 +15,7 @@ export default function Projects() {
       action={<ViewAllLink to="/projects" label="View all" />}
     >
       <motion.div
-        className="grid gap-4 sm:grid-cols-2"
+        className="divide-y divide-line"
         initial="hidden"
         whileInView="show"
         viewport={viewportOnce}

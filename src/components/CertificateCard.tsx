@@ -2,7 +2,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { motion } from 'motion/react'
 import { ArrowRight, ArrowUpRight, ExternalLink } from 'lucide-react'
 import { formatCertificateDate, type Certificate } from '../lib/certificates'
-import { pop, rise } from '../lib/motion'
+import { rise } from '../lib/motion'
 
 /**
  * Unlike ProjectCard, this is an <article> rather than a Link. It has to be: the card
@@ -26,7 +26,7 @@ export default function CertificateCard({ certificate }: { certificate: Certific
       variants={rise}
       // transition-colors, not transition: the bare utility also transitions
       // transform, which would fight motion's reveal animation on the same element.
-      className="group relative flex flex-col overflow-hidden rounded-xl border border-line bg-surface p-5 transition-colors hover:border-accent/40 hover:bg-surface"
+      className="group relative flex flex-col border-b border-r border-line p-5 transition-colors hover:bg-surface"
     >
       {hasBody && (
         <span
@@ -40,25 +40,25 @@ export default function CertificateCard({ certificate }: { certificate: Certific
           src={image}
           alt={`${title} certificate`}
           loading="lazy"
-          className="mb-4 aspect-[4/3] w-full rounded-lg border border-line object-cover"
+          className="mb-4 aspect-[4/3] w-full rounded border border-line object-cover"
         />
       )}
 
       <div className="flex items-center justify-between gap-3">
-        <span className="font-mono text-[11px] uppercase tracking-wider text-slate-500">
+        <span className="font-mono text-xs text-ink-subtle">
           {issuer}
         </span>
         <div className="flex shrink-0 items-center gap-2">
-          <span className="font-mono text-[11px] text-slate-500">
+          <span className="font-mono text-xs text-ink-subtle">
             {formatCertificateDate(date)}
           </span>
           {hasBody && (
-            <ArrowUpRight className="h-4 w-4 text-slate-600 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-accent" />
+            <ArrowUpRight className="h-4 w-4 text-ink-subtle transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-accent" />
           )}
         </div>
       </div>
 
-      <h3 className="mt-3 text-lg font-semibold text-slate-100">
+      <h3 className="mt-3 text-lg font-semibold tracking-tight">
         {hasBody ? (
           <Link
             to={`/certificates/${slug}`}
@@ -67,7 +67,7 @@ export default function CertificateCard({ certificate }: { certificate: Certific
             state={{ backgroundLocation: location }}
             // The stretched link: this pseudo-element covers the whole card, which is
             // already `relative`.
-            className="after:absolute after:inset-0 group-hover:text-white"
+            className="transition-colors after:absolute after:inset-0 group-hover:text-accent"
           >
             {title}
           </Link>
@@ -76,23 +76,13 @@ export default function CertificateCard({ certificate }: { certificate: Certific
         )}
       </h3>
 
-      {credentialId && <p className="mt-2 font-mono text-xs text-slate-500">ID: {credentialId}</p>}
+      {credentialId && <p className="mt-2 font-mono text-xs text-ink-subtle">ID: {credentialId}</p>}
 
       {/* Spacer keeps the footer rows aligned across cards of unequal height. */}
       <div className="flex-1" />
 
       {skills && skills.length > 0 && (
-        <div className="mt-4 flex flex-wrap gap-1.5">
-          {skills.map((s) => (
-            <motion.span
-              key={s}
-              variants={pop}
-              className="rounded border border-line bg-bg px-2 py-0.5 font-mono text-[11px] text-slate-400"
-            >
-              {s}
-            </motion.span>
-          ))}
-        </div>
+        <p className="mt-4 font-mono text-xs text-ink-subtle">{skills.join(' / ')}</p>
       )}
 
       {(hasBody || url) && (
@@ -116,7 +106,7 @@ export default function CertificateCard({ certificate }: { certificate: Certific
               rel="noreferrer"
               // relative z-10 lifts this above the stretched link's pseudo-element —
               // without it the card's click area swallows Verify entirely.
-              className="relative z-10 inline-flex items-center gap-1.5 text-sm text-slate-400 transition-colors hover:text-accent"
+              className="relative z-10 inline-flex items-center gap-1.5 text-sm text-ink-muted transition-colors hover:text-accent"
             >
               Verify
               <ExternalLink className="h-3.5 w-3.5" />

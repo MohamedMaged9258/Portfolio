@@ -43,7 +43,7 @@ export default function ProjectsIndex() {
           </motion.header>
 
           <motion.div
-            className="grid gap-4 sm:grid-cols-2"
+            className="divide-y divide-line"
             initial="hidden"
             whileInView="show"
             viewport={viewportOnce}

@@ -1,9 +1,9 @@
 import { motion } from 'motion/react'
-import { Mail } from 'lucide-react'
 import Section from './Section'
 import Socials from './Socials'
+import ResumeButton from './ResumeButton'
 import { profile } from '../lib/profile'
-import { rise, viewportOnce } from '../lib/motion'
+import { rise, stagger, viewportOnce } from '../lib/motion'
 
 export default function Contact() {
   const availability = profile.availability ? profile.availability.toLowerCase() : 'open to new opportunities'
@@ -11,28 +11,30 @@ export default function Contact() {
   return (
     <Section id="contact" title="Contact">
       <motion.div
-        className="rounded-xl border border-line bg-surface p-8 text-center"
         initial="hidden"
         whileInView="show"
         viewport={viewportOnce}
-        variants={rise}
+        variants={stagger(0.08)}
       >
-        <p className="mx-auto max-w-xl leading-relaxed text-slate-400">
-          I&apos;m currently {availability}. The fastest way to reach me is email — I&apos;ll get back to you as
+        <motion.p variants={rise} className="max-w-[60ch] text-lg leading-relaxed">
+          I&apos;m currently {availability}. Email is the fastest way to reach me, and I reply as
           soon as I can.
-        </p>
+        </motion.p>
 
-        <a
+        {/* The address is the call to action: set large, so it reads at a glance and
+            copies cleanly. */}
+        <motion.a
+          variants={rise}
           href={`mailto:${profile.email}`}
-          className="mt-6 inline-flex items-center gap-2 rounded-md bg-accent px-5 py-2.5 text-sm font-semibold text-bg transition hover:brightness-110"
+          className="mt-6 inline-block break-all text-2xl font-semibold tracking-tight text-ink underline decoration-line decoration-1 underline-offset-8 transition-colors hover:text-accent hover:decoration-accent sm:text-4xl"
         >
-          <Mail className="h-4 w-4" />
           {profile.email}
-        </a>
+        </motion.a>
 
-        <div className="mt-6 flex justify-center">
+        <motion.div variants={rise} className="mt-8 flex flex-wrap items-center gap-3">
+          <ResumeButton />
           <Socials />
-        </div>
+        </motion.div>
       </motion.div>
     </Section>
   )
