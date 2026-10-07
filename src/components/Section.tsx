@@ -1,7 +1,8 @@
-import { useRef, type ReactNode } from 'react'
-import { motion, useInView } from 'motion/react'
+import { useContext, type ReactNode } from 'react'
+import { motion } from 'motion/react'
 import Container from './Container'
 import { cn } from '../lib/cn'
+import { ActiveSectionContext } from '../lib/useActiveSection'
 import { WIPE_CLASS, rise, stagger, viewportOnce, wipe } from '../lib/motion'
 
 interface SectionProps {
@@ -19,13 +20,11 @@ interface SectionProps {
  * collapses and the heading sits above the content, with the action beside it.
  */
 export default function Section({ id, title, children, action, className }: SectionProps) {
-  const ref = useRef<HTMLElement>(null)
-  // The same band useActiveSection watches, so the rail and the header nav always
-  // agree on which section you're in.
-  const active = useInView(ref, { margin: '-45% 0px -50% 0px' })
+  // Read from the same source as the header nav, so the two always agree.
+  const active = useContext(ActiveSectionContext) === id
 
   return (
-    <section ref={ref} id={id} className={cn('scroll-mt-20 border-t border-line py-16 sm:py-20', className)}>
+    <section id={id} className={cn('scroll-mt-20 border-t border-line py-16 sm:py-20', className)}>
       <Container className="grid gap-8 lg:grid-cols-12 lg:gap-10">
         <motion.header
           className="flex items-baseline justify-between gap-4 lg:col-span-3 lg:sticky lg:top-24 lg:flex-col lg:justify-start lg:self-start"

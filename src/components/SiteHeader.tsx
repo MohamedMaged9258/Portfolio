@@ -1,4 +1,4 @@
-import { useState, type MouseEvent } from 'react'
+import { useContext, useState, type MouseEvent } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from 'motion/react'
 import { Menu, X } from 'lucide-react'
@@ -7,7 +7,7 @@ import ResumeButton from './ResumeButton'
 import Wordmark from './Wordmark'
 import { cn } from '../lib/cn'
 import { DUR, EASE } from '../lib/motion'
-import { useActiveSection } from '../lib/useActiveSection'
+import { ActiveSectionContext } from '../lib/useActiveSection'
 import { featuredCertificates } from '../lib/certificates'
 
 interface NavItem {
@@ -45,8 +45,11 @@ const navItems = allNavItems.filter(
   (item) => item.sectionId !== 'certificates' || featuredCertificates.length > 0,
 )
 
-/** Module scope keeps the identity stable so useActiveSection's effect runs once. */
-const sectionIds = navItems
+/**
+ * The homepage sections the nav tours, which Home tracks with useActiveSection.
+ * Module scope keeps the identity stable so that hook's effect runs once.
+ */
+export const sectionIds = navItems
   .map((item) => item.sectionId)
   .filter((id): id is string => id !== undefined)
 
@@ -59,13 +62,13 @@ const sectionIds = navItems
  * leaving that hook as the only thing that moves the page. It also means the links
  * work from a project page, where they now navigate home first.
  *
- * On non-home routes useActiveSection finds no sections and returns null, so no
- * underline shows — which is correct there.
+ * The active section comes from ActiveSectionContext, which only Home provides; on
+ * other routes it's null, so no underline shows — which is correct there.
  */
 export default function SiteHeader() {
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
-  const active = useActiveSection(sectionIds)
+  const active = useContext(ActiveSectionContext)
   const { pathname } = useLocation()
 
   /**
