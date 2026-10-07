@@ -2,7 +2,7 @@ import { useRef, type ReactNode } from 'react'
 import { motion, useInView } from 'motion/react'
 import Container from './Container'
 import { cn } from '../lib/cn'
-import { rise, stagger, viewportOnce } from '../lib/motion'
+import { WIPE_CLASS, rise, stagger, viewportOnce, wipe } from '../lib/motion'
 
 interface SectionProps {
   id: string
@@ -35,9 +35,10 @@ export default function Section({ id, title, children, action, className }: Sect
           variants={stagger(0.08)}
         >
           <motion.h2
-            variants={rise}
+            variants={wipe}
             className={cn(
               'flex items-center gap-2.5 text-lg font-semibold tracking-tight transition-colors duration-300',
+              WIPE_CLASS,
               active ? 'text-ink' : 'text-ink-muted',
             )}
           >

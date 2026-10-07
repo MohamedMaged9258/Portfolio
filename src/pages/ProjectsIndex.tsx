@@ -7,7 +7,7 @@ import ProjectCard from '../components/ProjectCard'
 import { projects } from '../lib/projects'
 import { useDocumentMeta } from '../lib/useDocumentMeta'
 import { profile } from '../lib/profile'
-import { rise, stagger, viewportOnce } from '../lib/motion'
+import { WIPE_CLASS, rise, stagger, viewportOnce, wipe } from '../lib/motion'
 
 export default function ProjectsIndex() {
   useDocumentMeta({
@@ -29,8 +29,8 @@ export default function ProjectsIndex() {
             variants={stagger(0.08)}
           >
             <motion.h1
-              variants={rise}
-              className="text-3xl font-semibold tracking-tight sm:text-4xl"
+              variants={wipe}
+              className={`text-3xl font-semibold tracking-tight sm:text-4xl ${WIPE_CLASS}`}
             >
               Projects
             </motion.h1>

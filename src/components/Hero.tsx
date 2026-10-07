@@ -4,7 +4,7 @@ import { ArrowUpRight } from 'lucide-react'
 import Container from './Container'
 import ResumeButton from './ResumeButton'
 import { profile } from '../lib/profile'
-import { EASE, rise, stagger } from '../lib/motion'
+import { EASE, WIPE_CLASS, rise, stagger, wipe } from '../lib/motion'
 
 /** The page's ambient light sits behind this from index.css (body::before). */
 export default function Hero() {
@@ -35,8 +35,8 @@ export default function Hero() {
             )}
 
             <motion.h1
-              variants={rise}
-              className="mt-6 text-4xl font-semibold leading-[1.05] tracking-tight sm:text-5xl"
+              variants={wipe}
+              className={`mt-6 text-4xl font-semibold leading-[1.05] tracking-tight sm:text-5xl ${WIPE_CLASS}`}
             >
               {profile.name}
             </motion.h1>
