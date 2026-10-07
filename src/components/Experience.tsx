@@ -27,7 +27,7 @@ export default function Experience() {
             <motion.li
               key={`${job.role}-${job.org}`}
               variants={riseStagger(0.05)}
-              className="relative grid gap-x-8 gap-y-1 sm:grid-cols-[8.5rem_1fr]"
+              className="relative grid gap-x-8 gap-y-1 sm:grid-cols-[10.5rem_1fr]"
             >
               {/* Sits before the node in DOM so it emerges from behind it. */}
               <motion.span

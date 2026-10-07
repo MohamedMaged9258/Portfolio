@@ -6,7 +6,11 @@ import { profile } from '../lib/profile'
 import { rise, stagger, viewportOnce } from '../lib/motion'
 
 export default function Contact() {
-  const availability = profile.availability ? profile.availability.toLowerCase() : 'open to new opportunities'
+  // Lowercase only the leading letter: the string carries acronyms ("AIOps") that a
+  // blanket toLowerCase() would flatten to "aiops".
+  const availability = profile.availability
+    ? profile.availability[0].toLowerCase() + profile.availability.slice(1)
+    : 'open to new opportunities'
 
   return (
     <Section id="contact" title="Contact">
