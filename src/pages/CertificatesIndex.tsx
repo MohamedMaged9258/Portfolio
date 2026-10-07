@@ -7,7 +7,7 @@ import CertificateCard from '../components/CertificateCard'
 import { certificates } from '../lib/certificates'
 import { useDocumentMeta } from '../lib/useDocumentMeta'
 import { profile } from '../lib/profile'
-import { rise, slideIn, stagger, viewportOnce } from '../lib/motion'
+import { rise, stagger, viewportOnce } from '../lib/motion'
 
 export default function CertificatesIndex() {
   useDocumentMeta({
@@ -32,12 +32,9 @@ export default function CertificatesIndex() {
             animate="show"
             variants={stagger(0.08)}
           >
-            <motion.p variants={slideIn} className="eyebrow">
-              // certificates
-            </motion.p>
             <motion.h1
               variants={rise}
-              className="mt-2 text-3xl font-bold tracking-tight text-slate-50 sm:text-4xl"
+              className="text-3xl font-semibold tracking-tight sm:text-4xl"
             >
               Certificates
             </motion.h1>
@@ -46,7 +43,9 @@ export default function CertificatesIndex() {
           {/* The route stays reachable while the collection is empty — only the nav
               tab and the homepage section hide themselves. */}
           {certificates.length === 0 ? (
-            <p className="text-lg leading-relaxed text-slate-400">Nothing here yet.</p>
+            <p className="border-t border-line pt-6 text-lg leading-relaxed">
+              Nothing here yet. Completed courses and credentials will be listed here.
+            </p>
           ) : (
             <motion.div
               className="grid border-l border-t border-line sm:grid-cols-2"

@@ -68,7 +68,7 @@ export default function DetailModal({
         // The backdrop is not a child, so clicks on it land on the dialog itself.
         if (e.target === dialogRef.current) close()
       }}
-      // 64rem matches the site's max-w-5xl container, so the overlay reads as the
+      // 72rem matches the site's max-w-6xl container, so the overlay reads as the
       // same width as the page rather than an arbitrary box.
       //
       // Deliberately not a flex container, and the height cap is on the child instead:
@@ -76,7 +76,7 @@ export default function DetailModal({
       // author styles beat UA styles whatever the specificity — so a `flex` class here
       // would override that and paint the panel inline in the page for the one frame
       // before showModal() runs (useEffect fires after paint).
-      className="m-auto w-[min(64rem,calc(100vw-2rem))] overflow-hidden rounded-xl border border-line bg-bg p-0 text-slate-300 backdrop:bg-black/70 backdrop:backdrop-blur-sm"
+      className="m-auto w-[min(72rem,calc(100vw-2rem))] overflow-hidden rounded border border-line bg-bg p-0 text-ink-muted backdrop:bg-bg/80 backdrop:backdrop-blur-sm"
     >
       <motion.div
         initial={{ opacity: 0, y: 8 }}
@@ -103,7 +103,7 @@ export default function DetailModal({
           aria-label="Close"
           // right-6/sm:right-8 matches the body's own p-6/sm:p-8, so the button's right
           // edge sits flush with the text column's rather than floating nearer the border.
-          className="absolute right-6 top-4 z-10 grid h-9 w-9 place-items-center rounded-md border border-line bg-surface text-slate-400 transition hover:bg-surface hover:text-accent sm:right-8"
+          className="absolute right-6 top-4 z-10 grid h-9 w-9 place-items-center rounded border border-line bg-surface text-ink-muted transition hover:border-accent/60 hover:text-accent sm:right-8"
         >
           <X className="h-4 w-4" />
         </button>

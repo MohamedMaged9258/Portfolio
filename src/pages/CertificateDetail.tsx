@@ -47,7 +47,7 @@ function CertificatePage({ certificate }: { certificate: Certificate }) {
           <div className="mx-auto max-w-2xl">
             <Link
               to="/certificates"
-              className="mb-8 inline-flex items-center gap-2 font-mono text-sm text-slate-400 transition hover:text-accent"
+              className="mb-8 inline-flex items-center gap-2 font-mono text-sm text-ink-muted transition hover:text-accent"
             >
               <ArrowLeft className="h-4 w-4" />
               back to certificates

@@ -110,11 +110,6 @@
     /* Parked off-screen so no sliver shows on the frame before the sweep starts. */
     mask-position: 118% 0;
   }
-
-  /* small monospace eyebrow label used on section headers */
-  .eyebrow {
-    @apply font-mono text-xs tracking-widest uppercase text-accent;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {

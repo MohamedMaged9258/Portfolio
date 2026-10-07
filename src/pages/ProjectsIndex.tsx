@@ -7,7 +7,7 @@ import ProjectCard from '../components/ProjectCard'
 import { projects } from '../lib/projects'
 import { useDocumentMeta } from '../lib/useDocumentMeta'
 import { profile } from '../lib/profile'
-import { rise, slideIn, stagger, viewportOnce } from '../lib/motion'
+import { rise, stagger, viewportOnce } from '../lib/motion'
 
 export default function ProjectsIndex() {
   useDocumentMeta({
@@ -28,17 +28,14 @@ export default function ProjectsIndex() {
             animate="show"
             variants={stagger(0.08)}
           >
-            <motion.p variants={slideIn} className="eyebrow">
-              // projects
-            </motion.p>
             <motion.h1
               variants={rise}
-              className="mt-2 text-3xl font-bold tracking-tight text-slate-50 sm:text-4xl"
+              className="text-3xl font-semibold tracking-tight sm:text-4xl"
             >
               Projects
             </motion.h1>
-            <motion.p variants={rise} className="mt-4 max-w-2xl text-lg leading-relaxed text-slate-400">
-              Everything I&apos;ve written up — case studies and build logs.
+            <motion.p variants={rise} className="mt-4 max-w-[65ch] text-lg leading-relaxed">
+              Everything I&apos;ve written up: case studies and build logs.
             </motion.p>
           </motion.header>
 

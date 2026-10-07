@@ -16,11 +16,6 @@ export const rise: Variants = {
   show: { opacity: 1, y: 0, transition: { duration: DUR.reveal, ease: EASE } },
 }
 
-export const slideIn: Variants = {
-  hidden: { opacity: 0, x: -8 },
-  show: { opacity: 1, x: 0, transition: { duration: DUR.reveal, ease: EASE } },
-}
-
 /** Smaller, faster sibling of `rise` for chips, pills and list bullets. */
 export const pop: Variants = {
   hidden: { opacity: 0, y: 4 },
