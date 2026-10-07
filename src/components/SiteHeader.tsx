@@ -79,7 +79,7 @@ export default function SiteHeader() {
       ? active === item.sectionId
       : pathname === item.to || pathname.startsWith(`${item.to}/`)
 
-  const { scrollY } = useScroll()
+  const { scrollY, scrollYProgress } = useScroll()
   useMotionValueEvent(scrollY, 'change', (v) => setScrolled(v > 8))
 
   // At the top the header dissolves into the hero; the open menu needs the solid
@@ -167,6 +167,16 @@ export default function SiteHeader() {
           </AnimatePresence>
         </button>
       </nav>
+
+      {/* Reading progress along the header's bottom edge: where you are on the page.
+          A scroll-bound transform, so it's hidden for reduced motion. Hidden in CSS
+          rather than by a useReducedMotion() branch, which the prerendered HTML
+          can't know about and would fail hydration for those users. */}
+      <motion.span
+        aria-hidden
+        style={{ scaleX: scrollYProgress }}
+        className="pointer-events-none absolute inset-x-0 -bottom-px h-px origin-left bg-accent/70 motion-reduce:hidden"
+      />
 
       <AnimatePresence initial={false}>
         {open && (
