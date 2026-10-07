@@ -103,7 +103,7 @@ export default function DetailModal({
           aria-label="Close"
           // right-6/sm:right-8 matches the body's own p-6/sm:p-8, so the button's right
           // edge sits flush with the text column's rather than floating nearer the border.
-          className="absolute right-6 top-4 z-10 grid h-9 w-9 place-items-center rounded-md border border-line bg-surface text-slate-400 transition hover:bg-elevated hover:text-accent sm:right-8"
+          className="absolute right-6 top-4 z-10 grid h-9 w-9 place-items-center rounded-md border border-line bg-surface text-slate-400 transition hover:bg-surface hover:text-accent sm:right-8"
         >
           <X className="h-4 w-4" />
         </button>

@@ -134,7 +134,7 @@ export default function SiteHeader() {
           onClick={() => setOpen((v) => !v)}
           aria-label={open ? 'Close menu' : 'Open menu'}
           aria-expanded={open}
-          className="grid h-9 w-9 place-items-center rounded-md text-slate-300 transition hover:bg-elevated lg:hidden"
+          className="grid h-9 w-9 place-items-center rounded-md text-slate-300 transition hover:bg-surface lg:hidden"
         >
           <AnimatePresence mode="wait" initial={false}>
             <motion.span
@@ -172,7 +172,7 @@ export default function SiteHeader() {
                       to={item.to}
                       onClick={() => setOpen(false)}
                       className={cn(
-                        'rounded-md px-2 py-2.5 text-sm transition hover:bg-elevated hover:text-white',
+                        'rounded-md px-2 py-2.5 text-sm transition hover:bg-surface hover:text-white',
                         isActive(item) ? 'text-slate-100' : 'text-slate-300',
                       )}
                     >

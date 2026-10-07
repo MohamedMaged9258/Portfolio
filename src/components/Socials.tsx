@@ -20,7 +20,7 @@ export default function Socials({ className }: { className?: string }) {
           // the JSON-LD that scripts/prerender.mjs emits.
           rel="me noreferrer"
           aria-label={label}
-          className="grid h-9 w-9 place-items-center rounded-md text-slate-400 transition hover:bg-elevated hover:text-accent"
+          className="grid h-9 w-9 place-items-center rounded-md text-slate-400 transition hover:bg-surface hover:text-accent"
         >
           <Icon className="h-[18px] w-[18px]" />
         </a>

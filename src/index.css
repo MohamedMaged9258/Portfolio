@@ -1,17 +1,20 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
-/* ---- Design tokens (dark, engineering-leaning) ---- */
+/* ---- Design tokens: dark "ops console" ----
+   One warm-graphite neutral family plus a single amber signal. Text tokens are
+   checked against --color-bg: ink-muted ~7:1, ink-subtle ~5:1 (both pass AA). */
 @theme {
-  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "JetBrains Mono Variable", ui-monospace, SFMono-Regular, monospace;
+  --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono Variable", ui-monospace, SFMono-Regular, monospace;
 
-  --color-bg: #0a0e14;
-  --color-surface: #0f151e;
-  --color-elevated: #141c27;
-  --color-line: #1e2732;
-  --color-accent: #22d3ee;
-  --color-accent-soft: #164e57;
+  --color-bg: #0e0d0c;
+  --color-surface: #161412;
+  --color-line: #2a2724;
+  --color-ink: #ece8e3;
+  --color-ink-muted: #a8a29e;
+  --color-ink-subtle: #8a837d;
+  --color-accent: #e3a74f;
 
   /* ---- Motion vocabulary ---- */
   --ease-signal: cubic-bezier(0.16, 1, 0.3, 1); /* expo-out: arrives fast, settles */
@@ -54,17 +57,22 @@
   }
 
   body {
-    @apply bg-bg text-slate-300 font-sans antialiased;
+    @apply bg-bg text-ink-muted font-sans antialiased;
   }
 
   h1, h2, h3, h4 {
-    @apply text-slate-100;
+    @apply text-ink;
     text-wrap: balance;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
   }
 
   ::selection {
     background-color: color-mix(in oklab, var(--color-accent) 30%, transparent);
-    color: #fff;
+    color: var(--color-ink);
   }
 
   * {

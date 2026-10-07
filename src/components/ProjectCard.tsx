@@ -22,7 +22,7 @@ export default function ProjectCard({ project }: { project: Project }) {
       variants={rise}
       // transition-colors, not transition: the bare utility also transitions
       // transform, which would fight motion's reveal animation on the same element.
-      className="group relative flex flex-col overflow-hidden rounded-xl border border-line bg-surface p-5 transition-colors hover:border-accent/40 hover:bg-elevated"
+      className="group relative flex flex-col overflow-hidden rounded-xl border border-line bg-surface p-5 transition-colors hover:border-accent/40 hover:bg-surface"
     >
       {/* Fills along the top edge on hover, echoing a span in the Experience waterfall. */}
       <span
