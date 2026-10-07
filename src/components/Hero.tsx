@@ -1,34 +1,16 @@
-import { useRef } from 'react'
 import { Link } from 'react-router-dom'
-import { motion, useInView } from 'motion/react'
+import { motion } from 'motion/react'
 import { ArrowUpRight } from 'lucide-react'
 import Container from './Container'
 import ResumeButton from './ResumeButton'
 import { profile } from '../lib/profile'
-import { cn } from '../lib/cn'
 import { EASE, rise, stagger } from '../lib/motion'
 
+/** The page's ambient light sits behind this from index.css (body::before). */
 export default function Hero() {
-  const ref = useRef<HTMLElement>(null)
-  // mask-position isn't compositor-accelerated, so keep the sweep from repainting
-  // once the hero has scrolled away. Re-entering restarts it, which reads fine.
-  const scanning = useInView(ref, { amount: 0.1 })
-
   return (
-    <section ref={ref} className="relative overflow-hidden">
-      {/* Both grid layers share one wrapper so the vignette mask applies to each. */}
-      <motion.div
-        className="pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_at_top,black,transparent_70%)]"
-        aria-hidden
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1.2, ease: EASE }}
-      >
-        <div className="absolute inset-0 bg-grid opacity-60" />
-        <div className={cn('absolute inset-0 bg-grid-scan', scanning && 'animate-scan')} />
-      </motion.div>
-
-      <Container className="relative pb-16 pt-14 sm:pb-24 sm:pt-20">
+    <section>
+      <Container className="pb-16 pt-14 sm:pb-24 sm:pt-20">
         <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-14">
           {/* Intro: availability, name, one line of subtext, two actions. Location and
               socials live in About and the header so the hero stays one moment. */}
