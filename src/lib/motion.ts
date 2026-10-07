@@ -32,12 +32,6 @@ export const riseStagger = (each = 0.04): Variants => ({
   },
 })
 
-/** Vertical rail draw, for the Experience trace waterfall. Needs `origin-top`. */
-export const drawY: Variants = {
-  hidden: { scaleY: 0 },
-  show: { scaleY: 1, transition: { duration: DUR.draw, ease: EASE } },
-}
-
 /** One-shot liveness probe: a disc that expands past its anchor and fades out. */
 export const probeOnce: Variants = {
   hidden: { scale: 1, opacity: 0.55 },
